@@ -1,0 +1,32 @@
+# Seguridad de toda la intranet (Apache 2.4 / LiteSpeed). Cada carpeta puede agregar sus propias reglas.
+Options -Indexes
+
+# En el servidor, todo por HTTPS. No aplica en localhost (XAMPP).
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# Menos datos (asistencia v3): el servidor comprime el texto (los estilos bajan de ~120 KB a ~20 KB).
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+# Estilos y scripts se piden con ?v=fecha: el celular los guarda un año y solo los descarga de nuevo cuando cambian.
+# Las imágenes, 30 días. Las páginas PHP nunca se guardan (Cache-Control: no-store en los bootstrap).
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+        Header append Vary Accept-Encoding
+    </FilesMatch>
+    <FilesMatch "\.(png|jpe?g|svg|webp|ico)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+</IfModule>
+
+# Nunca se descargan archivos ocultos (.env, .git, .htaccess) ni documentación, scripts o respaldos.
+<FilesMatch "(^\.|\.(env|example|sql|md|bat|cmd|ps1|exe|log|zip|bak|old|eml)$)">
+    Require all denied
+</FilesMatch>

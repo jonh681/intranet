@@ -1,0 +1,9 @@
+# Código compartido de la intranet: los .php solo los incluye PHP; el navegador solo puede pedir los estilos.
+Options -Indexes
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
+# Excepción: el navegador reporta aquí el consumo de datos (comun/consumo.js; exige sesión y CSRF).
+<Files "registrar_consumo.php">
+    Require all granted
+</Files>

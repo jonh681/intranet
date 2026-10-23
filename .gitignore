@@ -1,0 +1,14 @@
+# Configuración privada (contraseñas y llaves)
+tickets/.env
+tickets.env
+asistencia/config.php
+# Archivos que suben o generan los usuarios
+asistencia/uploads/*
+!asistencia/uploads/.htaccess
+correos/
+# Ejecutable de Tailwind (se descarga de github.com/tailwindlabs/tailwindcss/releases)
+tools/tailwindcss.exe
+# Versión anterior de asistencia (solo local)
+asistenciaV3/
+# Versión anterior de asistencia (solo local)
+asistenciaV3/

@@ -1,0 +1,2 @@
+# Archivos internos: solo los usa PHP, nunca se abren desde el navegador.
+Require all denied

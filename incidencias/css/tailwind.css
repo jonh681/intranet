@@ -1,0 +1,36 @@
+/* Fuente de Tailwind de Incidencias. Se compila a css/app.css con tools/compilar_css.bat (en la raíz de la intranet). */
+@import "tailwindcss" source(none);
+@source "..";
+@source "../js";
+
+@theme {
+    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* Azul del logo de Fedele (tickets) */
+    --color-brand-50: #eff4ff;
+    --color-brand-100: #dce6fd;
+    --color-brand-200: #c0d2fb;
+    --color-brand-300: #93b2f7;
+    --color-brand-400: #5f8bf0;
+    --color-brand-500: #3a69e6;
+    --color-brand-600: #1f52c4;
+    --color-brand-700: #1a44a3;
+    --color-brand-800: #1a3a83;
+    --color-brand-900: #1b336b;
+    --color-brand-950: #13213f;
+    /* Colores de asistencia: así el calendario para elegir días se ve igual al de asistencia */
+    --color-navy: #0b1f3a;
+    --color-primary: #13315c;
+    --color-secondary: #e6ecf6;
+    --color-accent: #5b8bd9;
+    --color-info: #3b82c4;
+    --color-success: #2f9e6e;
+    --color-warning: #d9a032;
+    --color-error: #c2412f;
+}
+
+@layer base {
+    html { color-scheme: light; -webkit-font-smoothing: antialiased; }
+    body:has(dialog[open]) { overflow: hidden; }
+    :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
+    [hidden] { display: none !important; }
+}

@@ -1,0 +1,15 @@
+# Sin listados de carpetas y sin acceso web a configuración ni archivos internos.
+Options -Indexes
+<FilesMatch "^(config(\.example)?\.php|db\.php|ui\.php|bootstrap\.php|\.htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# Siempre HTTPS: sin él, los navegadores (en especial Safari en iPhone) no permiten pedir la ubicación.
+# localhost queda fuera para el desarrollo con XAMPP.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>

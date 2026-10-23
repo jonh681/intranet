@@ -1,0 +1,5 @@
+# Incidencias: las librerías (lib*.php) solo las incluye PHP; la fuente de Tailwind no se publica.
+Options -Indexes
+<FilesMatch "^(lib(_\w+)?\.php|tailwind\.css)$">
+    Require all denied
+</FilesMatch>
