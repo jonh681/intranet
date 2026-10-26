@@ -30,3 +30,6 @@ Options -Indexes
 <FilesMatch "(^\.|\.(env|example|sql|md|bat|cmd|ps1|exe|log|zip|bak|old|eml)$)">
     Require all denied
 </FilesMatch>
+# FilesMatch solo ve el nombre del archivo: lo que está dentro de carpetas ocultas (.git/config, .git/objects/…)
+# se bloquea por la ruta.
+RedirectMatch 404 /\.(git|svn|claude|vscode|idea)(/|$)

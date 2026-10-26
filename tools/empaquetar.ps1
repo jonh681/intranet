@@ -30,7 +30,7 @@ function Get-EnvValue([string]$key, [string]$default = '') { if ($envLocal.Conta
 # Fuera del paquete: herramientas locales, modo desarrollo, documentación, fuentes de estilos, instalador de la fusión,
 # configuración privada y archivos generados (correos no enviados).
 $exclude = @(
-    '^tools/', '^asistencia[Vv]\d+/', '^dev\.php$', '^comun/dev\.css$', '^instalar/fusionar\.php$', '\.md$', '(^|/)\.gitignore$',
+    '(^|/)\.(git|claude|vscode|idea)/', '^tools/', '^asistencia[Vv]\d+/', '^dev\.php$', '^comun/dev\.css$', '^instalar/fusionar\.php$', '\.md$', '(^|/)\.gitignore$',
     '^tickets/\.env', '^tickets/\.claude/', '^asistencia/config\.example\.php$', '^asistencia/assets/src/',
     '^(tickets|incidencias)/css/tailwind\.css$', '^correos/.+\.eml$'
 )
