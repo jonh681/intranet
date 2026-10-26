@@ -33,34 +33,21 @@ Con estos dos archivos puedes regresar a la versión anterior (ver «Si algo sal
 2. Clic derecho en `intranet.zip` → **Extract** → en `/public_html`, aceptando **reemplazar** los archivos.
 3. Borra `intranet.zip` de `public_html`.
 
-## 4. Actualiza la base de datos
+## 4. Actualiza la base de datos (desde phpMyAdmin, sin Terminal)
 
-Crea las tablas de Cotizaciones (productos, clientes, lista de precios, pedidos), las que falten de versiones
-anteriores, y carga los datos iniciales de Cotizaciones. Se puede repetir sin riesgo: solo agrega lo que falta.
+Crea las tablas que falten (Cotizaciones y consumo de datos) y carga los datos iniciales de Cotizaciones
+(165 productos, 2,709 clientes y 135 precios). Solo agrega lo que falta y no duplica nada: se puede importar más de una vez.
 
-1. El usuario de la base solo tiene permisos de datos y aquí se crean tablas. cPanel → **Bases de datos MySQL** →
-   *Usuarios actuales* → `{USUARIO}_intranet` → modificar privilegios → marca **TODOS LOS PRIVILEGIOS** → guardar.
-2. cPanel → **Terminal** y ejecuta:
+1. Con el paquete viene `actualizacion_base.sql` (si no está, pídelo: se genera desde la base de tu computadora).
+2. cPanel → **phpMyAdmin** → a la izquierda, la base **`{USUARIO}_intranet`** → pestaña **Importar**.
+3. Elige `actualizacion_base.sql`, deja lo demás como está y presiona **Importar** (o **Continuar**).
+4. Debe salir un mensaje verde y aparecer las tablas `cot_clientes`, `cot_lista_precios`, `cot_pedidos`,
+   `cot_pedido_partidas`, `cot_productos` (y `consumo_datos` si no existía).
 
-   ```
-   php ~/public_html/intranet/instalar/importar_cotizaciones.php
-   ```
+phpMyAdmin entra con tu cuenta de cPanel: no hay que cambiar los privilegios del usuario de la base.
 
-   Debe terminar con algo como:
-
-   ```
-   Migración: cot_productos: productos para pedidos y cotizaciones
-   ...
-   cot_productos: 165 productos.
-   cot_clientes: 2709 clientes (9 repetidos sin cargar).
-   cot_lista_precios: 135 productos.
-   ```
-
-   Si dice «ya tiene datos: no se tocó», ya estaba cargado: está bien.
-3. **Regresa los privilegios** a solo `SELECT`, `INSERT`, `UPDATE` y `DELETE` (mismo lugar que el paso 1).
-
-¿Tu cPanel no tiene Terminal? Pide a soporte del hosting que ejecute el comando del paso 2, o avísame y te preparo
-un archivo para importarlo en phpMyAdmin.
+Con Terminal (si algún día la tienes): dale todos los privilegios al usuario de la base, ejecuta
+`php ~/public_html/intranet/instalar/importar_cotizaciones.php` y regresa los privilegios a `SELECT`, `INSERT`, `UPDATE` y `DELETE`.
 
 ## 5. Revisa la configuración privada
 
@@ -110,7 +97,7 @@ Desde ese momento los pedidos llegan a Compras (Samuel Pérez, con copia oculta 
 
 - **«El servicio no está disponible»:** revisa que la base y su contraseña en `intranet.env` coincidan.
 - **Error 500:** el detalle queda en `public_html/intranet/error_log`. Revisa que PHP sea 8.1 o más nuevo.
-- **El paso 4 falla con «command denied» o «Access denied»:** faltó darle todos los privilegios al usuario de la base.
+- **phpMyAdmin marca error al importar:** copia el texto en rojo; si dice «already exists», esa tabla ya estaba y no pasa nada.
 - **No llegan correos:** los que no salieron se guardan en `public_html/intranet/correos/` con el motivo.
 - **Regresar a la versión anterior:** borra `public_html/intranet`, sube y extrae `intranet_respaldo_FECHA.zip` en
   `public_html`. Las tablas nuevas de Cotizaciones no estorban a la versión anterior; si quieres quitarlas, en
