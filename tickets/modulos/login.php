@@ -24,27 +24,24 @@ unset($_SESSION['error'], $_SESSION['email'], $_SESSION['login_notice']);
     <title>Iniciar sesión | Fedele 360</title>
     <link rel="stylesheet" href="../css/app.css?v=<?= (int) filemtime(__DIR__ . '/../css/app.css') ?>">
 </head>
-<body class="grid lg:grid-cols-[1.1fr_1fr]">
-    <aside class="relative hidden overflow-hidden bg-brand-800 lg:flex lg:flex-col lg:justify-between lg:p-12 xl:p-16">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,var(--color-brand-500),transparent_55%),radial-gradient(circle_at_90%_95%,var(--color-brand-950),transparent_60%)]" aria-hidden="true"></div>
-        <svg class="absolute -right-24 -bottom-24 size-[28rem] text-white/5" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="18" aria-hidden="true"><ellipse cx="100" cy="100" rx="88" ry="62" transform="rotate(-18 100 100)"/></svg>
-        <p class="relative text-2xl font-bold tracking-tight text-white">Fedele <span class="text-sky-300">360</span></p>
-        <div class="relative max-w-md">
-            <h1 class="text-4xl leading-tight font-bold tracking-tight text-white xl:text-5xl">Todo tu trabajo, en un solo lugar.</h1>
-            <p class="mt-5 text-lg text-brand-100">Soporte, asistencia e incidencias del equipo Fedele, en una sola cuenta.</p>
-            <ul class="mt-10 space-y-4 text-brand-50">
-                <?php foreach (['Reporta problemas y sigue cada ticket', 'Registra tu jornada y tus visitas', 'Solicita vacaciones, permisos e incapacidades'] as $feature): ?>
-                <li class="flex items-center gap-3"><span class="grid size-7 place-items-center rounded-full bg-white/10 ring-1 ring-white/20"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="size-4" aria-hidden="true"><path d="m5 10.5 3 3 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><?= $feature ?></li>
+<body class="grid lg:grid-cols-[1.15fr_1fr]">
+    <aside class="hidden bg-[linear-gradient(160deg,#eef3ff_0%,#f7f9fc_55%,#e6eeff_100%)] text-ink lg:flex lg:flex-col lg:justify-between lg:border-r lg:border-slate-200 lg:p-14 xl:p-20">
+        <p class="flex items-center gap-3"><img src="../img/logo-chico.png" alt="Fedele" width="160" height="109" class="h-11 w-auto">
+            <span class="border-l border-slate-300 pl-3 text-xl leading-none font-bold tracking-tight text-ink">Fedele <b class="bg-[linear-gradient(135deg,#1f52c4_10%,#0ea5e9_90%)] bg-clip-text font-extrabold text-transparent">360</b></span></p>
+        <div class="max-w-xl">
+            <h1 class="text-5xl leading-[1.05] font-semibold tracking-tight xl:text-6xl">Todo tu trabajo, en un solo lugar.</h1>
+            <dl class="mt-12 text-[15px]">
+                <?php foreach (['Tickets' => 'Reporta un problema y sigue su atención', 'Asistencia' => 'Registra tu jornada y tus visitas', 'Incidencias' => 'Vacaciones, permisos e incapacidades', 'Cotizaciones' => 'Precios, cotizaciones y pedidos'] as $app => $what): ?>
+                <div class="grid grid-cols-[8rem_1fr] gap-4 border-b border-ink/10 py-3.5"><dt class="font-semibold text-brand-700"><?= $app ?></dt><dd class="text-slate-600"><?= $what ?></dd></div>
                 <?php endforeach; ?>
-            </ul>
+            </dl>
         </div>
-        <p class="relative text-sm text-brand-200">© <?= date('Y') ?> Fedele S.A. de C.V. <span class="text-brand-300/70">· Desarrollado por Ing. Jonathan Bautista</span></p>
+        <p class="text-sm text-slate-500">© <?= date('Y') ?> Fedele S.A. de C.V. Desarrollado por Ing. Jonathan Bautista.</p>
     </aside>
     <main class="flex min-h-screen items-center justify-center bg-white px-6 py-12">
         <section class="w-full max-w-sm" aria-labelledby="login-title">
-            <img src="../img/logo-mediano.png" alt="Fedele S.A. de C.V." width="320" height="219" class="mx-auto mb-8 w-36 mix-blend-multiply">
-            <p class="eyebrow">Bienvenido de nuevo</p>
-            <h2 id="login-title" class="mt-2 text-3xl font-bold tracking-tight text-slate-900">Inicia sesión</h2>
+            <img src="../img/logo-mediano.png" alt="Fedele S.A. de C.V." width="320" height="219" class="mb-10 w-32 lg:hidden">
+            <h2 id="login-title" class="text-4xl font-semibold tracking-tight text-ink">Inicia sesión</h2>
             <p class="mt-2 text-sm text-slate-500">Ingresa tus datos para entrar a Fedele 360.</p>
             <?php if ($error): ?>
                 <div class="alert-error mt-6" role="alert"><?= escape($error) ?></div>
@@ -63,9 +60,9 @@ unset($_SESSION['error'], $_SESSION['email'], $_SESSION['login_notice']);
                     <input id="password" name="password" type="password" class="input py-3" placeholder="Ingresa tu contraseña" autocomplete="current-password" maxlength="1024" aria-describedby="password-help">
                     <p class="help-text" id="password-help">¿Primera vez? Escribe solo tu correo y da Enter: te enviaremos un enlace para crear tu contraseña.</p>
                 </div>
-                <button type="submit" class="btn btn-primary w-full py-3">Iniciar sesión <span aria-hidden="true">→</span></button>
+                <button type="submit" class="btn btn-primary w-full py-3">Iniciar sesión</button>
             </form>
-            <p class="mt-10 border-t border-slate-100 pt-6 text-center text-xs text-slate-500">¿Olvidaste tu contraseña o necesitas acceso? Pide al administrador de sistemas que te envíe un enlace de recuperación a tu correo.</p>
+            <p class="mt-10 border-t border-slate-200 pt-6 text-xs text-slate-500">¿Olvidaste tu contraseña o necesitas acceso? Pide al administrador de sistemas que te envíe un enlace de recuperación a tu correo.</p>
         </section>
     </main>
 </body>

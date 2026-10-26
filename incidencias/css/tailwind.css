@@ -1,10 +1,10 @@
 /* Fuente de Tailwind de Incidencias. Se compila a css/app.css con tools/compilar_css.bat (en la raíz de la intranet). */
 @import "tailwindcss" source(none);
+@import "../../comun/tema-tailwind.css";
 @source "..";
 @source "../js";
 
 @theme {
-    --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     /* Azul del logo de Fedele (tickets) */
     --color-brand-50: #eff4ff;
     --color-brand-100: #dce6fd;
@@ -31,6 +31,7 @@
 @layer base {
     html { color-scheme: light; -webkit-font-smoothing: antialiased; }
     body:has(dialog[open]) { overflow: hidden; }
-    :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
+    :focus-visible { @apply outline-2 outline-offset-2 outline-brand-600; }
     [hidden] { display: none !important; }
+    body { background-color: var(--color-paper); }
 }

@@ -163,9 +163,109 @@ function intranet_migrar(PDO $db): array
         $done[] = 'consumo_datos: consumo de datos por persona y día';
     }
 
+    // 9. Cotizaciones (cotizaciones/): productos con sus listas de precios, clientes, la lista de precios que consultan los
+    //    representantes y el historial de pedidos y cotizaciones de cada quien. Los datos iniciales los carga
+    //    instalar/importar_cotizaciones.php. Precios en pesos, sin IVA.
+    $tables = $db->query("SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name LIKE 'cot\\_%'")->fetchAll(PDO::FETCH_COLUMN);
+    $price = 'DECIMAL(10,2) NOT NULL DEFAULT 0';
+    if (!in_array('cot_productos', $tables, true)) {
+        // Productos para generar pedidos: una columna por lista de precios (cotizaciones/lib.php > COT_LISTAS).
+        $db->exec("CREATE TABLE cot_productos (
+            id              INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            numero_articulo VARCHAR(20) NOT NULL COMMENT 'Número de artículo (SAP)',
+            descripcion     VARCHAR(200) NOT NULL,
+            fabricante      VARCHAR(100) NOT NULL DEFAULT '' COMMENT 'Marca',
+            codigo_barras   VARCHAR(40) NOT NULL DEFAULT '',
+            precio_base $price, precio_15 $price, precio_20 $price, precio_25 $price, precio_30 $price, precio_33 $price,
+            precio_35 $price, precio_40 $price, dermatologica_angelopolis $price, gema_munoz $price, medae $price,
+            actualizado_en  DATETIME NULL,
+            actualizado_por INT NULL,
+            UNIQUE KEY uq_cot_productos_articulo (numero_articulo),
+            KEY idx_cot_productos_fabricante (fabricante)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $done[] = 'cot_productos: productos para pedidos y cotizaciones';
+    }
+    if (!in_array('cot_clientes', $tables, true)) {
+        $db->exec("CREATE TABLE cot_clientes (
+            id              INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            codigo          INT NULL COMMENT 'Código de cliente (SAP)',
+            nombre          VARCHAR(150) NOT NULL,
+            lista_precios   VARCHAR(60) NOT NULL DEFAULT 'Lista de precios 25%',
+            actualizado_en  DATETIME NULL,
+            actualizado_por INT NULL,
+            KEY idx_cot_clientes_nombre (nombre),
+            KEY idx_cot_clientes_codigo (codigo)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $done[] = 'cot_clientes: clientes con su lista de precios';
+    }
+    if (!in_array('cot_lista_precios', $tables, true)) {
+        // Pestaña «Precios» del cotizador: precio público y con 25% de descuento, sin y con IVA (vacío = sin precio).
+        $db->exec("CREATE TABLE cot_lista_precios (
+            id              INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            marca           VARCHAR(60) NOT NULL,
+            linea           VARCHAR(120) NOT NULL DEFAULT '' COMMENT 'Línea o grupo dentro de la marca',
+            sap             VARCHAR(20) NOT NULL DEFAULT '',
+            codigo_barras   VARCHAR(40) NOT NULL DEFAULT '',
+            descripcion     VARCHAR(200) NOT NULL,
+            publico         DECIMAL(10,2) NULL, publico_iva DECIMAL(10,2) NULL,
+            descuento       DECIMAL(10,2) NULL, descuento_iva DECIMAL(10,2) NULL,
+            orden           INT NOT NULL DEFAULT 0,
+            actualizado_en  DATETIME NULL,
+            actualizado_por INT NULL,
+            KEY idx_cot_lista_marca (marca, orden)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $done[] = 'cot_lista_precios: lista de precios por marca';
+    }
+    if (!in_array('cot_pedidos', $tables, true)) {
+        // Historial: lo que envió cada representante (pedidos a Compras y cotizaciones a clientes), con los precios
+        // calculados por el servidor al enviarlo.
+        $db->exec("CREATE TABLE cot_pedidos (
+            id          INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            usuario_id  INT NOT NULL,
+            tipo        ENUM('pedido', 'cotizacion') NOT NULL,
+            modalidad   ENUM('general', 'mostrador') NOT NULL,
+            cliente_id  INT NULL,
+            cliente     VARCHAR(150) NOT NULL,
+            correo      VARCHAR(200) NOT NULL DEFAULT '',
+            telefono    VARCHAR(40) NOT NULL DEFAULT '',
+            direccion   VARCHAR(300) NOT NULL DEFAULT '',
+            comentarios TEXT NULL,
+            piezas      INT NOT NULL DEFAULT 0,
+            subtotal    DECIMAL(12,2) NOT NULL DEFAULT 0 COMMENT 'Sin IVA',
+            iva         DECIMAL(12,2) NOT NULL DEFAULT 0,
+            descuento   DECIMAL(12,2) NOT NULL DEFAULT 0,
+            total       DECIMAL(12,2) NOT NULL DEFAULT 0,
+            enviado     TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = el correo salió',
+            creado_en   DATETIME NOT NULL,
+            KEY idx_cot_pedidos_usuario (usuario_id, creado_en),
+            KEY idx_cot_pedidos_fecha (creado_en),
+            CONSTRAINT fk_cot_pedidos_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $db->exec("CREATE TABLE cot_pedido_partidas (
+            id              INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            pedido_id       INT NOT NULL,
+            numero_articulo VARCHAR(20) NOT NULL,
+            descripcion     VARCHAR(200) NOT NULL,
+            codigo_barras   VARCHAR(40) NOT NULL DEFAULT '',
+            cantidad        INT NOT NULL,
+            precio_publico  DECIMAL(10,2) NOT NULL DEFAULT 0,
+            precio          DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT 'Precio del cliente, sin IVA',
+            bonificacion    TINYINT(1) NOT NULL DEFAULT 0,
+            KEY idx_cot_partidas_pedido (pedido_id),
+            CONSTRAINT fk_cot_partidas_pedido FOREIGN KEY (pedido_id) REFERENCES cot_pedidos (id) ON DELETE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        $done[] = 'cot_pedidos y cot_pedido_partidas: historial de pedidos y cotizaciones';
+    }
+    // 10. Una cotización se puede convertir en pedido: el pedido guarda de qué cotización salió.
+    if (!$hasColumn('cot_pedidos', 'origen_id')) {
+        $db->exec("ALTER TABLE cot_pedidos ADD origen_id INT NULL COMMENT 'Cotización de la que salió este pedido' AFTER modalidad,
+            ADD KEY idx_cot_pedidos_origen (origen_id)");
+        $done[] = 'cot_pedidos: origen_id (cotización convertida en pedido)';
+    }
+
     // Vistas con la forma que espera el código de asistencia e incidencias (asistencia/api.php, incidencias/lib_*.php).
     // El «gerente» de cada persona es su jefe directo (la cuenta activa con el correo de correo_jefe, que no sea ella misma).
-    $boss = "(SELECT j.id FROM usuarios j WHERE j.correo_usuario = TRIM(u.correo_jefe) AND j.activo = 1 AND j.id <> u.id LIMIT 1)";
+    $boss ="(SELECT j.id FROM usuarios j WHERE j.correo_usuario = TRIM(u.correo_jefe) AND j.activo = 1 AND j.id <> u.id LIMIT 1)";
     $columns = "u.id, u.nombre_usuario AS nombre, u.correo_usuario AS correo, u.area, u.fecha_ingreso, u.contrasena_usuario AS contrasena,
         CASE WHEN u.rol IN ('superusuario', 'supervision') THEN 'admin' WHEN u.rol = 'gerente' THEN 'gerente' ELSE 'empleado' END AS rol,
         $boss AS gerente_id, u.puesto = 'representante' AS representante, CAST(NULL AS DATETIME) AS creado_en,

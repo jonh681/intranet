@@ -22,7 +22,7 @@ $user = requireAdminPage($db);
 <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 flex flex-col gap-5">
     <section class="flex flex-wrap items-end justify-between gap-4">
         <div>
-            <div class="text-xs font-semibold tracking-widest text-primary">ADMINISTRACIÓN</div>
+            <div class="text-xs font-semibold text-primary">Administración</div>
             <h1 class="text-2xl sm:text-3xl font-bold mt-1">Consumo de datos</h1>
             <p class="text-sm text-base-content/60 mt-1 max-w-2xl">Datos que Fedele 360 (tickets, asistencia e incidencias) descarga y envía en el dispositivo de cada persona, medidos por su navegador. El contador del celular puede marcar un poco más por la propia conexión.</p>
         </div>

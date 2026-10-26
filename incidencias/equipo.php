@@ -56,7 +56,7 @@ echo incHeader($db, $user, 'equipo.php', 'Incidencias de mi equipo');
         <h2 class="text-lg font-semibold text-slate-900" id="team-title">Incidencias</h2>
         <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
             <table class="w-full min-w-[40rem] text-left text-sm">
-                <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500"><tr>
+                <thead class="bg-slate-50 text-xs text-slate-500"><tr>
                     <th class="px-4 py-3 font-semibold">Persona</th><th class="px-4 py-3 font-semibold">Tipo</th><th class="px-4 py-3 font-semibold">Fechas</th>
                     <th class="px-4 py-3 font-semibold">Días</th><th class="px-4 py-3 font-semibold">Estado</th>
                 </tr></thead>

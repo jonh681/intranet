@@ -24,7 +24,8 @@ const INTRANET_REMITENTE = 'no-responder@fedele.com.mx';
 /**
  * $to, $cc: correos ('ana@fedele.com.mx') o personas (['name' => 'Ana', 'email' => 'ana@fedele.com.mx']).
  * $opt: text (versión sin formato; si falta se saca del HTML), from_name, reply_to, urgent (prioridad alta),
- *       attachments ([['contenido', 'nombre', 'mime']]) e ignorar_prueba (códigos y enlaces de contraseña: solo al dueño).
+ *       attachments ([['contenido', 'nombre', 'mime']]), bcc (copias ocultas; en modo prueba no se usan)
+ *       e ignorar_prueba (códigos y enlaces de contraseña: solo al dueño).
  * Nunca lanza excepción: un correo fallido no debe impedir guardar lo que se hizo. Devuelve true si salió.
  */
 function intranet_correo(array $to, array $cc, string $subject, string $html, array $opt = []): bool
@@ -39,6 +40,7 @@ function intranet_correo(array $to, array $cc, string $subject, string $html, ar
     };
     $to = $people($to);
     $cc = array_diff_key($people($cc), $to);
+    $bcc = array_diff_key($people($opt['bcc'] ?? []), $to, $cc);
     if (!$to) return false;
     $text = (string)($opt['text'] ?? '');
     if ($text === '') {
@@ -57,6 +59,7 @@ function intranet_correo(array $to, array $cc, string $subject, string $html, ar
         $subject = '[Prueba] ' . $subject;
         $to = [$test => ''];
         $cc = [];
+        $bcc = [];
     }
 
     $mail = new PHPMailer(true);
@@ -74,6 +77,7 @@ function intranet_correo(array $to, array $cc, string $subject, string $html, ar
         $mail->setFrom(INTRANET_REMITENTE, (string)($opt['from_name'] ?? 'Fedele 360'));
         foreach ($to as $email => $name) $mail->addAddress($email, $name);
         foreach ($cc as $email => $name) $mail->addCC($email, $name);
+        foreach ($bcc as $email => $name) $mail->addBCC($email, $name);
         $replyTo = (string)($opt['reply_to'] ?? '');
         if ($replyTo !== '' && filter_var($replyTo, FILTER_VALIDATE_EMAIL)) $mail->addReplyTo($replyTo);
         if (!empty($opt['urgent'])) {
@@ -119,6 +123,8 @@ function intranet_correo_guardar(PHPMailer $mail, string $reason): void
     }
     if (!is_dir(INTRANET_CORREOS_DIR)) @mkdir(INTRANET_CORREOS_DIR, 0750, true);
     if (!is_file(INTRANET_CORREOS_DIR . '/.htaccess')) @file_put_contents(INTRANET_CORREOS_DIR . '/.htaccess', "Require all denied\n");
+    // Las copias ocultas no van en el mensaje: se anotan para saber a quién más iba.
+    $bcc = implode(', ', array_column($mail->getBccAddresses(), 0));
     @file_put_contents(INTRANET_CORREOS_DIR . '/' . date('Ymd-His') . '-' . bin2hex(random_bytes(3)) . '.eml',
-        'X-No-Enviado: ' . preg_replace('/[\r\n]+/', ' ', $reason) . "\r\n" . $raw);
+        'X-No-Enviado: ' . preg_replace('/[\r\n]+/', ' ', $reason) . "\r\n" . ($bcc !== '' ? "X-Copia-Oculta: $bcc\r\n" : '') . $raw);
 }

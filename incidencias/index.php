@@ -17,7 +17,7 @@ echo incHeader($db, $user, 'index.php', 'Mis incidencias');
 ?>
 <main class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
     <?= incTitle('Mis incidencias', 'Incidencias', 'Registra vacaciones, permisos e incapacidades. Administración las revisa y, ya aprobadas, justifican tus días sin registro en asistencia.',
-        '<button class="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700" id="open-inc" type="button">'
+        '<button class="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700" id="open-inc" type="button">'
         . '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" class="size-4" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke-linecap="round"/></svg>Registrar incidencia</button>') ?>
     <div id="notice" class="mt-6 rounded-xl border px-4 py-3 text-sm" role="status" hidden></div>
 

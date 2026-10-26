@@ -10,5 +10,5 @@ correos/
 tools/tailwindcss.exe
 # Versión anterior de asistencia (solo local)
 asistenciaV3/
-# Versión anterior de asistencia (solo local)
-asistenciaV3/
+# Datos de la carga inicial de Cotizaciones (clientes y precios del negocio): van en el paquete, no en git
+instalar/datos/*.sql

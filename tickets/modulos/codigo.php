@@ -77,14 +77,14 @@ $masked = mb_substr($local, 0, 2) . str_repeat('•', max(2, mb_strlen($local) -
     <title>Código de acceso | Fedele 360</title>
     <link rel="stylesheet" href="../css/app.css?v=<?= (int) filemtime(__DIR__ . '/../css/app.css') ?>">
 </head>
-<body class="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
-    <main class="card w-full max-w-md p-8">
-        <img src="../img/logo-mediano.png" alt="Fedele S.A. de C.V." width="320" height="219" class="mx-auto mb-6 w-24 mix-blend-multiply">
+<body class="flex min-h-screen items-center justify-center bg-white px-6 py-12">
+    <main class="w-full max-w-sm">
+        <img src="../img/logo-mediano.png" alt="Fedele S.A. de C.V." width="320" height="219" class="mb-10 w-28">
         <span class="mx-auto grid size-12 place-items-center rounded-full bg-brand-50 text-brand-600" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="size-6"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg>
         </span>
-        <h1 class="mt-4 text-center text-2xl font-bold tracking-tight text-slate-900">Verifica tu identidad</h1>
-        <p class="mt-2 text-center text-sm text-slate-500">Enviamos un código de 6 dígitos a <strong class="text-slate-700"><?= escape($masked) ?></strong>. Vence en 10 minutos.</p>
+        <h1 class="text-3xl font-semibold tracking-tight text-ink">Verifica tu identidad</h1>
+        <p class="mt-2 text-sm text-slate-500">Enviamos un código de 6 dígitos a <strong class="text-slate-700"><?= escape($masked) ?></strong>. Vence en 10 minutos.</p>
         <?php if ($error): ?><div class="alert-error mt-6" role="alert"><?= escape($error) ?></div><?php endif; ?>
         <?php if ($notice): ?><div class="alert-success mt-6" role="status"><?= escape($notice) ?></div><?php endif; ?>
         <form method="post" class="mt-6 space-y-4">
@@ -98,7 +98,7 @@ $masked = mb_substr($local, 0, 2) . str_repeat('•', max(2, mb_strlen($local) -
             <form method="post"><input type="hidden" name="csrf" value="<?= escape($_SESSION['csrf']) ?>"><button name="accion" value="reenviar" class="cursor-pointer font-medium text-brand-700 hover:text-brand-900">Reenviar código</button></form>
             <form method="post"><input type="hidden" name="csrf" value="<?= escape($_SESSION['csrf']) ?>"><button name="accion" value="cancelar" class="cursor-pointer text-slate-500 hover:text-slate-800" formnovalidate>Cancelar</button></form>
         </div>
-        <p class="mt-5 text-center text-xs text-slate-400">Por seguridad, soporte y supervisión confirman su identidad con un código en cada inicio de sesión.</p>
+        <p class="mt-6 text-xs text-slate-500">Por seguridad, soporte y supervisión confirman su identidad con un código en cada inicio de sesión.</p>
     </main>
 </body>
 </html>

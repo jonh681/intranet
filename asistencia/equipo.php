@@ -20,7 +20,7 @@ $user = requireManagerPage($db);
 <main class="w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex-1 flex flex-col gap-5">
     <section class="flex flex-wrap items-end justify-between gap-3">
         <div>
-            <div class="text-xs font-semibold tracking-widest text-primary">MI EQUIPO</div>
+            <div class="text-xs font-semibold text-primary">Mi equipo</div>
             <h1 class="text-2xl sm:text-3xl font-bold mt-1" id="day-title">Hoy</h1>
         </div>
         <div class="flex items-center gap-1.5">
@@ -78,7 +78,7 @@ $user = requireManagerPage($db);
 </main>
 
 <footer class="flex flex-wrap gap-2 justify-between items-center px-4 sm:px-[6%] py-5 border-t border-base-300 text-xs text-base-content/50">
-    <span class="font-semibold tracking-widest">ASISTENCIA</span>
+    <span class="font-semibold">Asistencia</span>
     <span>Solo lectura</span>
 </footer>
 </body>

@@ -63,22 +63,22 @@ $create = ($link['tipo'] ?? '') === 'crear';
     <title><?= $create ? 'Crear contraseña' : 'Restablecer contraseña' ?> | Fedele 360</title>
     <link rel="stylesheet" href="../css/app.css?v=<?= (int) filemtime(__DIR__ . '/../css/app.css') ?>">
 </head>
-<body class="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
-    <main class="card w-full max-w-md p-8">
-        <img src="../img/logo-mediano.png" alt="Fedele S.A. de C.V." width="320" height="219" class="mx-auto mb-6 w-24 mix-blend-multiply">
+<body class="flex min-h-screen items-center justify-center bg-white px-6 py-12">
+    <main class="w-full max-w-sm">
+        <img src="../img/logo-mediano.png" alt="Fedele S.A. de C.V." width="320" height="219" class="mb-10 w-28">
         <?php if (!$link): ?>
             <span class="mx-auto grid size-12 place-items-center rounded-full bg-amber-100 text-amber-700" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="size-6"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16h.01" stroke-linecap="round"/></svg>
             </span>
-            <h1 class="mt-4 text-center text-2xl font-bold tracking-tight text-slate-900">Enlace no válido</h1>
-            <p class="mt-2 text-center text-sm text-slate-500">El enlace venció, ya se usó o no es correcto. Si es tu primera vez, escribe tu correo en el inicio de sesión y da Enter para recibir uno nuevo. Si olvidaste tu contraseña, pídele al administrador de sistemas un enlace de recuperación.</p>
+            <h1 class="text-3xl font-semibold tracking-tight text-ink">Enlace no válido</h1>
+            <p class="mt-2 text-sm text-slate-500">El enlace venció, ya se usó o no es correcto. Si es tu primera vez, escribe tu correo en el inicio de sesión y da Enter para recibir uno nuevo. Si olvidaste tu contraseña, pídele al administrador de sistemas un enlace de recuperación.</p>
             <a href="login.php" class="btn btn-primary mt-6 w-full py-3">Ir al inicio de sesión</a>
         <?php else: ?>
             <span class="mx-auto grid size-12 place-items-center rounded-full bg-brand-50 text-brand-600" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="size-6"><circle cx="8" cy="15" r="4"/><path d="m11 12 8-8M16 7l2 2M14 9l2 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
-            <h1 class="mt-4 text-center text-2xl font-bold tracking-tight text-slate-900"><?= $create ? 'Crea tu contraseña' : 'Escribe tu nueva contraseña' ?></h1>
-            <p class="mt-2 text-center text-sm text-slate-500">Para la cuenta <strong class="text-slate-700"><?= escape($link['email']) ?></strong>.</p>
+            <h1 class="text-3xl font-semibold tracking-tight text-ink"><?= $create ? 'Crea tu contraseña' : 'Escribe tu nueva contraseña' ?></h1>
+            <p class="mt-2 text-sm text-slate-500">Para la cuenta <strong class="text-slate-700"><?= escape($link['email']) ?></strong>.</p>
             <?php if ($error): ?><div class="alert-error mt-6" role="alert"><?= escape($error) ?></div><?php endif; ?>
             <form method="post" class="mt-6 space-y-4" autocomplete="off">
                 <input type="hidden" name="csrf" value="<?= escape($_SESSION['csrf']) ?>">
@@ -96,7 +96,7 @@ $create = ($link['tipo'] ?? '') === 'crear';
                 </div>
                 <button type="submit" class="btn btn-primary w-full py-3"><?= $create ? 'Crear contraseña' : 'Guardar contraseña' ?></button>
             </form>
-            <p class="mt-5 text-center text-xs text-slate-400">Al guardarla te llevaremos al inicio de sesión. El enlace solo funciona una vez.</p>
+            <p class="mt-6 text-xs text-slate-500">Al guardarla te llevaremos al inicio de sesión. El enlace solo funciona una vez.</p>
         <?php endif; ?>
     </main>
 </body>

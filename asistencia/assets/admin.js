@@ -107,7 +107,7 @@ function renderAbsent(day) {
     $('#absent-list').hidden = ok;
     $('#absent-list').replaceChildren(...absent.map(u => personButton(u, day, null)));
     $('#justified-block').hidden = !justified.length || !INCIDENTS;
-    $('#justified-title').textContent = `JUSTIFICADOS (${justified.length})`;
+    $('#justified-title').textContent = `Justificados (${justified.length})`;
     $('#justified-list').replaceChildren(...justified.map(u => personButton(u, day, incidentOn(u.id, day))));
 }
 
@@ -293,7 +293,7 @@ function openDetail(row) {
     }));
     if (row.visits.length) {
         $('#detail-list').append(
-            el('li', 'text-[11px] font-semibold tracking-widest text-base-content/50 px-1 pt-3', `VISITAS (${row.visits.length}) · ${formatMinutes(row.visitMinutes)}`),
+            el('li', 'text-xs font-medium text-base-content/50 px-1 pt-3', `Visitas (${row.visits.length}) · ${formatMinutes(row.visitMinutes)}`),
             ...row.visits.map((v, i) => visitItem(v, i + 1)));
     }
 
@@ -649,7 +649,7 @@ function renderDayModal() {
     const counts = dayCounts(day, monthData, userFilter());
     const isFuture = day > monthData.today;
 
-    $('#day-kicker').textContent = day === monthData.today ? 'HOY' : isFuture ? 'DÍA FUTURO' : 'DETALLE DEL DÍA';
+    $('#day-kicker').textContent = day === monthData.today ? 'Hoy' : isFuture ? 'Día futuro' : 'Detalle del día';
     $('#day-title').textContent = formatDay(day, {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
     const icons = $('#month-icons').content;
     // En celular solo icono y número (la leyenda del calendario explica los iconos).

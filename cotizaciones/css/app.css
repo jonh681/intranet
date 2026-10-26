@@ -1,0 +1,205 @@
+/*
+ * Tema de Fedele 360 sobre Bootstrap 5 (Cotizaciones), claro y luminoso. Mismos tokens que el resto de la intranet
+ * (comun/barra.css): azul Fedele #1F52C4 (acción y selección), tinta #0F2A5F (texto fuerte), fondo #F7F9FC, línea #E3E9F4,
+ * grafito #5B6B82. Capas blancas con línea azulada; sombra muy suave solo en lo que flota. Instrument Sans (comun/fuentes).
+ */
+:root {
+  --brand: #1f52c4;
+  --brand-dark: #1a44a3;
+  --brand-rgb: 31, 82, 196;
+  --azul: #1f52c4;
+  --tinta: #0f2a5f;
+  --papel: #f7f9fc;
+  --linea: #e3e9f4;
+  --grafito: #5b6b82;
+  --bs-primary: var(--brand);
+  --bs-primary-rgb: var(--brand-rgb);
+  --bs-link-color: var(--azul);
+  --bs-link-color-rgb: 31, 82, 196;
+  --bs-link-hover-color: #1a44a3;
+  --bs-body-font-family: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --bs-body-color: #142037;
+  --bs-body-bg: var(--papel);
+  --bs-secondary-color: var(--grafito);
+  --bs-secondary-bg: #eff3f9;
+  --bs-tertiary-bg: #eff3f9;
+  --bs-border-color: var(--linea);
+  --bs-border-radius: 9px;
+  --bs-border-radius-sm: 6px;
+  --bs-border-radius-lg: 12px;
+  --bs-border-radius-xl: 14px;
+  --bs-box-shadow-sm: 0 1px 2px rgba(15, 42, 95, .05);
+  --bs-focus-ring-color: rgba(31, 82, 196, .22);
+}
+
+/* Luz azul suave que baja de la barra superior. */
+body { background: radial-gradient(1100px 420px at 50% -180px, #e6eeff 0%, rgba(230, 238, 255, 0) 70%) no-repeat, var(--papel); }
+h1, h2, h3, .h5, .h6, .modal-title { letter-spacing: -.02em; color: var(--tinta); }
+.shadow-sm { box-shadow: var(--bs-box-shadow-sm) !important; }
+.letter-spaced { font-size: .95rem; color: var(--tinta) !important; }
+.letter-spaced .bi { color: var(--azul); }
+
+.btn { --bs-btn-font-weight: 600; --bs-btn-border-radius: 9px; }
+.btn-primary {
+  --bs-btn-bg: var(--brand); --bs-btn-border-color: var(--brand);
+  --bs-btn-hover-bg: var(--brand-dark); --bs-btn-hover-border-color: var(--brand-dark);
+  --bs-btn-active-bg: var(--brand-dark); --bs-btn-active-border-color: var(--brand-dark);
+  --bs-btn-disabled-bg: #9db4e6; --bs-btn-disabled-border-color: #9db4e6; --bs-btn-disabled-opacity: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 6px 16px -8px rgba(31, 82, 196, .6);
+}
+.btn-primary:disabled { box-shadow: none; }
+.btn-outline-primary {
+  --bs-btn-color: var(--brand); --bs-btn-border-color: #c8d6f5;
+  --bs-btn-hover-bg: #eef3ff; --bs-btn-hover-color: var(--brand-dark); --bs-btn-hover-border-color: #b7c9f2;
+  --bs-btn-active-bg: #e2eaff; --bs-btn-active-color: var(--brand-dark); --bs-btn-active-border-color: #b7c9f2;
+  --bs-btn-disabled-color: #8aa2d8; --bs-btn-disabled-border-color: #dbe3f5;
+}
+.btn-outline-secondary { --bs-btn-color: #36445b; --bs-btn-border-color: #cdd6e6; --bs-btn-hover-bg: #eff3f9; --bs-btn-hover-color: #142037; --bs-btn-hover-border-color: #cdd6e6; }
+.btn-light { --bs-btn-bg: #eff3f9; --bs-btn-border-color: #eff3f9; --bs-btn-hover-bg: var(--linea); --bs-btn-hover-border-color: var(--linea); }
+.text-bg-primary { background-color: #eef3ff !important; color: var(--brand-dark) !important; }
+.badge { --bs-badge-border-radius: 999px; --bs-badge-font-weight: 600; }
+.form-control, .form-select { border-color: #cdd6e6; }
+.form-control:hover, .form-select:hover { border-color: #97a4ba; }
+.form-control:focus, .form-select:focus, .ts-wrapper.focus .ts-control {
+  border-color: #5f8bf0;
+  box-shadow: 0 0 0 4px rgba(31, 82, 196, .12);
+}
+/* Paneles: capas blancas con una línea azulada. */
+.card { --bs-card-border-radius: 14px; --bs-card-inner-border-radius: 13px; border: 1px solid var(--linea) !important; background: #fff; }
+.modal-content { border-radius: 18px; box-shadow: 0 0 0 1px rgba(15, 42, 95, .05), 0 32px 64px -24px rgba(15, 42, 95, .32); }
+.modal-backdrop { --bs-backdrop-bg: #0f2a5f; --bs-backdrop-opacity: .35; }
+.alert { --bs-alert-border-radius: 12px; }
+
+/* ===== Encabezado del cotizador ===== */
+/* Fijo debajo del encabezado de la intranet (--ib-h, js/app.js); al bajar se compacta y quedan solo las pestañas */
+:root { --header-h: 0px; --ib-h: 0px; }
+/* Pestañas del cotizador como control segmentado, sobre el fondo claro. */
+.app-header {
+  position: sticky; top: var(--ib-h); z-index: 1030;
+  background: rgba(247, 249, 252, .92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  padding: 1rem 0 .9rem; border-bottom: 1px solid transparent; transition: border-color .2s;
+}
+.app-header.is-compact { border-bottom-color: var(--linea); }
+.app-header .container-xxl { padding-top: 0 !important; }
+
+.app-tabs { display: inline-flex; border: 0; gap: 4px; padding: 4px; flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none;
+  background: #eaf0f9; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(15, 42, 95, .04); }
+.app-tabs .nav-link {
+  color: var(--grafito); border: 0; border-radius: 9px;
+  padding: .55rem 1.1rem; font-weight: 600; white-space: nowrap;
+  display: flex; align-items: center; gap: .5rem;
+}
+.app-tabs .nav-link:hover { color: #142037; }
+.app-tabs .nav-link.active { color: var(--brand); background: #fff; box-shadow: 0 1px 2px rgba(15, 42, 95, .08), 0 0 0 1px rgba(15, 42, 95, .04); }
+
+/* ===== Catálogo de precios ===== */
+.buscador .input-group-text { border-right: 0; border-color: #cdd6e6; color: var(--grafito); }
+.buscador .form-control { border-left: 0; font-size: 1rem; }
+.btn-chip {
+  border-radius: 999px; border: 1px solid #cdd6e6; background: #fff;
+  color: var(--bs-body-color); font-weight: 500; padding: .3rem .8rem;
+}
+.btn-chip:hover { border-color: var(--brand); color: var(--brand); }
+.btn.btn-chip.active, .btn.btn-chip.active:hover, .btn.btn-chip.active:focus-visible {
+  background: var(--brand); border-color: var(--brand); color: #fff;
+}
+
+/* Filtros fijos debajo del encabezado */
+.filtros-fijos {
+  position: sticky; top: var(--header-h); z-index: 1020;
+  background: var(--papel);
+  margin-top: -1.5rem; padding-top: 1.5rem;
+}
+.chips { flex-wrap: wrap; }
+@media (max-width: 991.98px) {
+  /* en celular las marcas van en una sola fila deslizable para que el bloque fijo sea bajo */
+  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .chips .btn-chip { flex: 0 0 auto; }
+}
+
+.tabla-precios thead th {
+  position: sticky; top: calc(var(--header-h) + var(--filtros-h, 0px)); z-index: 2;
+  background: #fff; color: var(--grafito);
+  font-size: .8rem; font-weight: 600;
+  border-bottom: 1px solid var(--linea); white-space: nowrap; padding: .85rem .75rem;
+}
+@media (min-width: 992px) {
+  .tabla-precios-wrap { overflow: visible; } /* el encabezado de la tabla se fija respecto a la página */
+}
+@media (max-width: 991.98px) {
+  .tabla-precios-wrap { max-height: calc(100dvh - var(--header-h) - var(--filtros-h, 0px) - 1rem); min-height: 300px; }
+  .tabla-precios thead th { top: 0; }
+}
+.tabla-precios td { padding: .6rem .75rem; font-size: .9rem; border-color: #edf1f6; }
+.tabla-precios td.text-end { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tabla-precios .fila-grupo th {
+  background: #f3f6fc; font-size: .85rem; font-weight: 600;
+  color: var(--tinta); padding: .7rem .75rem; border-bottom-color: var(--linea);
+}
+.tabla-precios .fila-grupo .badge { background: transparent !important; color: var(--grafito); padding: 0; font-weight: 500; }
+.tabla-precios code { color: var(--brand); background: #edf1f6; padding: .1rem .4rem; border-radius: 6px; font-family: inherit; font-weight: 600; font-size: .85em; }
+
+/* ===== Cotizador ===== */
+.table-responsive { position: relative; } /* contiene elementos absolutos (visually-hidden) */
+/* Panel "Agregar productos" fijo en pantallas grandes */
+@media (min-width: 992px) {
+  .panel-fijo {
+    position: sticky; top: var(--header-h); z-index: 1020;
+    background: var(--papel);
+    margin-top: -1.5rem; padding-top: 1.5rem;
+  }
+  .panel-fijo > .card { margin-bottom: 1rem !important; }
+  .cotizador .table-responsive { overflow: visible; }
+  .tabla-productos thead th { position: sticky; top: calc(var(--header-h) + var(--agregar-h, 0px)); z-index: 2; background: #fff; }
+}
+.tabla-productos thead th {
+  font-size: .8rem; color: var(--grafito); font-weight: 600; white-space: nowrap; border-bottom: 1px solid var(--linea);
+}
+.tabla-productos td { font-variant-numeric: tabular-nums; border-color: #edf1f6; }
+.tabla-productos .input-cantidad { width: 5.5rem; margin: 0 auto; text-align: center; }
+.tabla-productos tr.fila-bonificacion > td { background: #eef7f2; }
+.tabla-productos .btn-icon { width: 2.1rem; height: 2.1rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+
+.empty-state .empty-icon {
+  width: 60px; height: 60px; border-radius: 16px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, #eef3ff, #e2eaff); color: var(--brand); font-size: 1.5rem;
+}
+
+@media (min-width: 1200px) {
+  .resumen { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+}
+/* Resumen: el total es la cifra principal del cotizador. */
+.resumen.card { background: linear-gradient(180deg, #f3f7ff 0%, #fff 45%); }
+.totales > div { display: flex; justify-content: space-between; padding: .4rem 0; }
+.totales dt { font-weight: 400; color: var(--bs-secondary-color); }
+.totales dd { margin: 0; font-variant-numeric: tabular-nums; }
+.totales .total { border-top: 1px dashed #cdd6e6; margin-top: .6rem; padding-top: 1rem; align-items: baseline; }
+.totales .total dt { color: var(--bs-body-color); font-weight: 600; }
+.totales .total dd { font-size: 2.2rem; font-weight: 650; letter-spacing: -.03em; color: var(--brand); line-height: 1; }
+
+.campo-comentarios { height: 100px; }
+
+/* ===== Historial y administración ===== */
+.pagina-titulo { font-size: 2.25rem; font-weight: 650; letter-spacing: -.025em; color: var(--tinta); line-height: 1.1; }
+.tabla-datos thead th {
+  font-size: .8rem; color: var(--grafito); font-weight: 600; white-space: nowrap; border-bottom: 1px solid var(--linea); background: #fff;
+}
+.tabla-datos td { font-size: .9rem; border-color: #edf1f6; }
+.tabla-datos td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tabla-datos .btn-icon { width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+.kpi { font-size: 2.2rem; font-weight: 650; letter-spacing: -.03em; color: var(--tinta); line-height: 1.05; font-variant-numeric: tabular-nums; }
+
+/* Tom Select */
+.ts-wrapper .ts-control { min-height: calc(1.5em + .75rem + 2px); border-color: #cdd6e6; border-radius: 9px; }
+.ts-wrapper.locked .ts-control { background: #edf1f6; }
+.ts-dropdown { z-index: 1060; border-radius: 12px; border-color: var(--linea); box-shadow: 0 0 0 1px rgba(6, 22, 49, .06), 0 14px 30px -12px rgba(6, 22, 49, .3); }
+.ts-dropdown .active { background: #edf1f6; color: inherit; }
+.ts-dropdown .highlight { background: #dce6fd; }
+
+/* SweetAlert con la tipografía y colores del sitio */
+.swal2-popup { font-family: var(--bs-body-font-family); border-radius: 18px; }
+.swal2-title { font-weight: 650; color: var(--tinta); }
+.swal2-styled { border-radius: 9px !important; }
+.swal2-styled.swal2-confirm { background-color: var(--brand) !important; }
+.swal2-container { z-index: 2000; }

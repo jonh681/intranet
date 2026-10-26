@@ -1,7 +1,7 @@
 # Fedele 360
 
-Una sola entrada (`index.php`) y un mismo inicio de sesión para tres apps: **Tickets**, **Asistencia** e **Incidencias**
-(vacaciones, permisos e incapacidades). Todo usa la base `intranet` (MariaDB/MySQL).
+Una sola entrada (`index.php`) y un mismo inicio de sesión para cuatro apps: **Tickets**, **Asistencia**, **Incidencias**
+(vacaciones, permisos e incapacidades) y **Cotizaciones** (pedidos de los representantes médicos). Todo usa la base `intranet` (MariaDB/MySQL).
 
 ## Estructura
 
@@ -31,6 +31,11 @@ intranet/
 │   ├── bootstrap.php, db.php  Sesión, base y utilidades que también usa incidencias/
 │   ├── assets/            JS, estilos (assets/src/input.css → app.css) y librerías (Leaflet, xlsx)
 │   └── uploads/           Evidencias de permisos e incapacidades (sin acceso web)
+├── cotizaciones/        Cotizador de los representantes médicos (precios, cotización general, venta mostrador),
+│   │                    su historial de pedidos y, para el superusuario, productos, lista de precios y clientes
+│   ├── lib.php            Acceso, listas de precios, cálculo de precios y lo que se administra
+│   ├── api.php            Productos, precios, envío (correo con PDF y Excel), historial y administración
+│   └── parciales/         Vistas del cotizador y de la administración
 ├── incidencias/         Mis incidencias, mi equipo, por revisar, todas, saldos y formato PDF
 │   ├── lib_vacaciones.php   Saldos por aniversario, días hábiles y festivos (también lo usa asistencia)
 │   ├── lib_solicitudes.php  Validación en dos pasos (jefe directo → quien valida) y sus correos
@@ -47,14 +52,15 @@ intranet/
 `usuarios.rol`: empleado, gerente, soporte, supervision, superusuario. `usuarios.puesto`: oficina, dermoconsejera, representante.
 Lo que ve cada quien sale solo de esos dos campos (`comun/acceso.php`):
 
-| | Tickets | Asistencia | Incidencias |
-|---|---|---|---|
-| Representante médico | ✓ | registra jornada y visitas | ✓ |
-| Dermoconsejera | — | registra jornada | ✓ |
-| Oficina | ✓ | — | ✓ |
-| Gerente | según su puesto | + su equipo si es de ventas (representante o dermoconsejera) | + su equipo |
-| Soporte | solo Panel de soporte | — | — |
-| Supervisión / Superusuario | reportes | administración | todo (valida quien está en `config.php > mail > cc`) |
+| | Tickets | Asistencia | Incidencias | Cotizaciones |
+|---|---|---|---|---|
+| Representante médico | ✓ | registra jornada y visitas | ✓ | cotiza, envía pedidos y ve su historial |
+| Dermoconsejera | — | registra jornada | ✓ | — |
+| Oficina | ✓ | — | ✓ | — |
+| Gerente | según su puesto | + su equipo si es de ventas (representante o dermoconsejera) | + su equipo | si su puesto es representante |
+| Soporte | solo Panel de soporte | — | — | — |
+| Supervisión | reportes | administración | todo (valida quien está en `config.php > mail > cc`) | — |
+| Superusuario | reportes | administración | todo | todo, más productos, lista de precios y clientes |
 
 El equipo de un gerente son las cuentas que lo tienen en `correo_jefe`.
 
@@ -62,6 +68,8 @@ El equipo de un gerente son las cuentas que lo tienen en `correo_jefe`.
 
 - **Cambiar estilos:** después de editar clases, `tools\compilar_css.bat` (o `tools\compilar_css.bat incidencias --watch`).
 - **Actualizar la base:** `C:\xampp\php\php.exe instalar\migraciones.php`.
+- **Cotizaciones, carga inicial:** `C:\xampp\php\php.exe instalar\importar_cotizaciones.php` (datos en `instalar/datos/`;
+  solo llena tablas vacías, `--reemplazar` vuelve a cargar todo y borra los cambios hechos en la intranet).
 - **Correos de prueba:** `TICKETS_MODO_PRUEBA` (tickets/.env) manda todos los correos de la intranet a una sola dirección;
   vacío = destinatarios reales. `TICKETS_CORREO_ACTIVO=0` apaga los envíos (se guardan como .eml en correos/).
 

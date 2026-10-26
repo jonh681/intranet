@@ -199,7 +199,7 @@ function incHeader(PDO $db, array $user, string $page, string $title): string
 function incTitle(string $eyebrow, string $title, string $text, string $actions = ''): string
 {
     return '<div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div><p class="text-xs font-semibold uppercase tracking-wider text-brand-600">' . esc($eyebrow) . '</p>
+        <div><p class="text-sm font-medium text-brand-600">' . esc($eyebrow) . '</p>
         <h1 class="mt-1 text-3xl font-bold text-slate-900">' . esc($title) . '</h1>
         <p class="mt-2 max-w-3xl text-slate-500">' . esc($text) . '</p></div>
         <div class="flex shrink-0 flex-wrap gap-2">' . $actions . '</div>

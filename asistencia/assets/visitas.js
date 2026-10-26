@@ -107,8 +107,8 @@ function openDetail(v) {
         return li;
     };
     $('#detail-list').replaceChildren(
-        v.comments ? el('li', 'rounded-box bg-base-200 p-3', null, el('div', 'text-[11px] font-semibold tracking-widest text-base-content/50 mb-1', 'COMENTARIOS'), el('p', 'text-sm whitespace-pre-line', v.comments)) : '',
-        el('li', 'text-[11px] font-semibold tracking-widest text-base-content/50 px-1 pb-1', 'UBICACIONES DE LA VISITA'),
+        v.comments ? el('li', 'rounded-box bg-base-200 p-3', null, el('div', 'text-xs font-medium text-base-content/50 mb-1', 'Comentarios'), el('p', 'text-sm whitespace-pre-line', v.comments)) : '',
+        el('li', 'text-xs font-medium text-base-content/50 px-1 pb-1', 'Ubicaciones de la visita'),
         item('start', 'Inicio de visita', v.started_at, v.start),
         item('end', 'Fin de visita', v.ended_at, v.end));
     $('#detail').showModal();

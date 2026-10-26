@@ -1,4 +1,5 @@
 @import "tailwindcss" source(none);
+@import "../../../comun/tema-tailwind.css";
 @source "../../*.php";
 @source "../*.js";
 @source "../../../incidencias/autorizar.php";
@@ -14,16 +15,16 @@
   prefersdark: false;
   color-scheme: light;
   --color-base-100: #ffffff;
-  --color-base-200: #f2f5fa;
-  --color-base-300: #dde4ef;
-  --color-base-content: #0f1f38;
-  --color-primary: #13315c;
+  --color-base-200: #f7f9fc;
+  --color-base-300: #e3e9f4;
+  --color-base-content: #142037;
+  --color-primary: #1f52c4;
   --color-primary-content: #ffffff;
-  --color-secondary: #e6ecf6;
-  --color-secondary-content: #13315c;
+  --color-secondary: #eef3ff;
+  --color-secondary-content: #1a44a3;
   --color-accent: #5b8bd9;
   --color-accent-content: #ffffff;
-  --color-neutral: #0b1f3a;
+  --color-neutral: #163a8f;
   --color-neutral-content: #ffffff;
   --color-info: #3b82c4;
   --color-info-content: #ffffff;
@@ -33,16 +34,12 @@
   --color-warning-content: #2b1d02;
   --color-error: #c2412f;
   --color-error-content: #ffffff;
-  --radius-selector: 1rem;
-  --radius-field: 0.625rem;
-  --radius-box: 1rem;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.5625rem;
+  --radius-box: 0.875rem;
   --border: 1px;
-  --depth: 1;
+  --depth: 0;
   --noise: 0;
-}
-
-@theme {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @layer base {

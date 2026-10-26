@@ -68,6 +68,10 @@ Genera solo `intranet.zip` (sin la base, la configuración ni las evidencias). S
 Si un cambio necesita modificar la base, se hace con `instalar/migraciones.php` (por Terminal de cPanel:
 `php ~/public_html/intranet/instalar/migraciones.php`, con un usuario de base que tenga permiso `ALTER`).
 
+**Cotizaciones (la primera vez):** después de extraer el zip ejecuta
+`php ~/public_html/intranet/instalar/importar_cotizaciones.php`. Crea las tablas y carga productos, clientes y lista de
+precios desde `instalar/datos/` (va en el zip); si ya tienen datos no los toca, así que es seguro repetirlo.
+
 ## Si algo falla
 
 - **Pantalla «El servicio no está disponible»**: la base o la contraseña de `intranet.env` no coinciden, o el archivo no está en `/home/{USUARIO}/`.

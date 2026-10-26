@@ -14,7 +14,7 @@ echo incHeader($db, $user, 'saldos.php', 'Saldos de vacaciones');
     </div>
     <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
         <table class="w-full min-w-[56rem] text-left text-sm">
-            <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500"><tr>
+            <thead class="bg-slate-50 text-xs text-slate-500"><tr>
                 <th class="px-4 py-3 font-semibold">Persona</th><th class="px-4 py-3 font-semibold">Ingreso</th><th class="px-4 py-3 font-semibold">Antigüedad</th>
                 <th class="px-4 py-3 font-semibold">Corresponden</th><th class="px-4 py-3 font-semibold">Usados</th><th class="px-4 py-3 font-semibold">En revisión</th>
                 <th class="px-4 py-3 font-semibold">Disponibles</th><th class="px-4 py-3"></th>

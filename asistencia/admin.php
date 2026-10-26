@@ -22,11 +22,11 @@ $user = requireAdminPage($db);
 
 <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 flex flex-col gap-5">
     <!-- Encabezado e indicadores -->
-    <section class="relative overflow-hidden rounded-box bg-neutral text-neutral-content shadow-xl shadow-neutral/20 p-5 sm:p-7 animate-pop-in">
+    <section class="relative overflow-hidden rounded-box bg-neutral text-neutral-content p-5 sm:p-7 animate-pop-in">
         <div class="pointer-events-none absolute -right-20 -top-28 size-80 rounded-full bg-accent/25 blur-3xl" aria-hidden="true"></div>
         <div class="relative flex flex-wrap items-end justify-between gap-3">
             <div>
-                <div class="text-[11px] font-semibold tracking-widest text-neutral-content/60">PANEL DE ASISTENCIA</div>
+                <div class="text-xs font-medium text-neutral-content/60">Panel de asistencia</div>
                 <h1 class="text-2xl sm:text-3xl font-bold mt-1" id="range-title">Hoy</h1>
             </div>
             <div class="flex flex-wrap gap-2" id="live" hidden>
@@ -53,7 +53,7 @@ $user = requireAdminPage($db);
         </div>
         <div class="relative mt-5" id="areas-block" hidden>
             <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <span class="text-[11px] font-semibold tracking-widest text-neutral-content/60">POR ÁREA</span>
+                <span class="text-xs font-medium text-neutral-content/60">Por área</span>
                 <span class="text-xs text-neutral-content/45" id="areas-caption"></span>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2 mt-2" id="areas-grid"></div>
@@ -78,7 +78,7 @@ $user = requireAdminPage($db);
             <p class="text-xs text-base-content/55" id="absent-hint">Haz clic en un empleado para registrar vacaciones, permiso o incapacidad.</p>
             <ul class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2" id="absent-list"></ul>
             <div id="justified-block" hidden>
-                <div class="text-[11px] font-semibold tracking-widest text-base-content/50 mb-2" id="justified-title">JUSTIFICADOS</div>
+                <div class="text-xs font-medium text-base-content/50 mb-2" id="justified-title">Justificados</div>
                 <ul class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2" id="justified-list"></ul>
             </div>
         </div>
@@ -162,7 +162,7 @@ $user = requireAdminPage($db);
                 <button class="btn btn-sm bg-base-100 shadow-md absolute right-3 top-3 z-[500] gap-1.5" id="detail-fit" type="button"><?= icon('map-pin', 'size-4') ?>Ver todos</button>
             </div>
             <div class="border-t md:border-t-0 md:border-l border-base-300 p-4 flex flex-col gap-2 md:overflow-y-auto md:h-[30rem]">
-                <div class="text-[11px] font-semibold tracking-widest text-base-content/50 px-1 pb-1">REGISTROS DEL DÍA</div>
+                <div class="text-xs font-medium text-base-content/50 px-1 pb-1">Registros del día</div>
                 <ol class="flex flex-col gap-2" id="detail-list"></ol>
             </div>
         </div>
@@ -177,7 +177,7 @@ $user = requireAdminPage($db);
             <div class="pointer-events-none absolute -right-16 -top-24 size-64 rounded-full bg-accent/25 blur-3xl" aria-hidden="true"></div>
             <div class="relative flex items-start justify-between gap-3">
                 <div class="min-w-0">
-                    <div class="text-[11px] font-semibold tracking-widest text-neutral-content/60" id="day-kicker">DETALLE DEL DÍA</div>
+                    <div class="text-xs font-medium text-neutral-content/60" id="day-kicker">Detalle del día</div>
                     <h3 class="text-xl sm:text-2xl font-bold mt-0.5 sm:truncate" id="day-title"></h3>
                 </div>
                 <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost text-neutral-content" aria-label="Cerrar"><?= icon('x', 'size-4') ?></button></form>
@@ -223,7 +223,7 @@ $user = requireAdminPage($db);
         </div>
         <div class="overflow-y-auto p-5 sm:p-6 flex flex-col gap-5">
             <section id="incident-existing" hidden>
-                <div class="text-[11px] font-semibold tracking-widest text-base-content/50 mb-2">INCIDENCIAS REGISTRADAS</div>
+                <div class="text-xs font-medium text-base-content/50 mb-2">Incidencias registradas</div>
                 <ul class="flex flex-col gap-2" id="incident-list"></ul>
             </section>
             <p class="alert alert-info alert-soft text-sm" id="incident-readonly" hidden></p>
@@ -285,7 +285,7 @@ $incidentTypes = array_filter([
 </dialog>
 
 <footer class="flex flex-wrap gap-2 justify-between items-center px-4 sm:px-[4%] py-5 border-t border-base-300 text-xs text-base-content/50">
-    <span class="font-semibold tracking-widest">ASISTENCIA</span>
+    <span class="font-semibold">Asistencia</span>
     <span>Panel de administración</span>
 </footer>
 </body>

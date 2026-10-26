@@ -179,7 +179,7 @@ $maxArea = max(array_merge([1], array_map(static fn($a) => (int)$a['total'], $ar
                 <div class="overflow-x-auto">
                 <table class="w-full min-w-[60rem] text-left text-sm">
                     <caption class="sr-only"><?= $total ?> solicitudes encontradas</caption>
-                    <thead class="bg-slate-50 text-xs font-medium tracking-wide text-slate-500 uppercase">
+                    <thead class="bg-slate-50 text-xs font-semibold text-slate-500">
                         <tr>
                             <th class="px-5 py-3">Folio / creación</th>
                             <th class="px-3 py-3">Solicitante</th><th class="px-3 py-3">Área</th><th class="px-3 py-3">Estado</th>

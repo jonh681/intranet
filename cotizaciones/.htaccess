@@ -1,0 +1,5 @@
+# Cotizaciones: lib.php y las vistas de parciales/ solo las incluye PHP.
+Options -Indexes
+<FilesMatch "^lib\.php$">
+    Require all denied
+</FilesMatch>

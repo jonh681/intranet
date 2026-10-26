@@ -28,9 +28,9 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
 <?= userHeader($user, 'jornada') ?>
 <main class="w-full max-w-5xl mx-auto px-4 sm:px-8 py-8 sm:py-12 flex-1">
 <?php if (!$user): ?>
-    <section class="card bg-base-100 shadow-xl shadow-base-300/40 border border-base-300 max-w-md mx-auto animate-pop-in">
+    <section class="card bg-base-100 border border-base-300 max-w-md mx-auto animate-pop-in">
         <div class="card-body p-6 sm:p-9">
-            <div class="text-xs font-semibold tracking-widest text-primary">TU ESPACIO DE TRABAJO</div>
+            <div class="text-xs font-semibold text-primary">Tu espacio de trabajo</div>
             <h1 class="text-3xl font-bold mt-1">Bienvenido de nuevo.</h1>
             <p class="text-base-content/60">Inicia sesión para registrar tu jornada.</p>
             <form id="auth-form" class="mt-5 flex flex-col gap-4">
@@ -51,11 +51,11 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
     </section>
 <?php else: ?>
     <div id="attendance" class="group/att grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] items-start" data-step="loading">
-        <section class="relative overflow-hidden rounded-box bg-neutral text-neutral-content shadow-xl shadow-neutral/20 p-5 sm:p-8 animate-pop-in" aria-labelledby="attendance-title">
+        <section class="relative overflow-hidden rounded-box bg-neutral text-neutral-content p-5 sm:p-8 animate-pop-in" aria-labelledby="attendance-title">
             <div class="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-accent/25 blur-3xl" aria-hidden="true"></div>
             <div class="relative flex flex-wrap items-start justify-between gap-3">
                 <div class="min-w-0">
-                    <div class="text-[11px] font-semibold tracking-widest text-neutral-content/60" id="today-label">HOY</div>
+                    <div class="text-xs font-medium text-neutral-content/60" id="today-label">Hoy</div>
                     <h1 class="text-2xl sm:text-3xl font-bold mt-1 break-words" id="attendance-title">Hola, <?= esc($user['name']) ?>.</h1>
                 </div>
                 <span class="badge badge-ghost gap-1.5" id="day-status"><span class="status status-neutral"></span><span class="js-text">Consultando…</span></span>
@@ -66,7 +66,7 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
                     <span class="flex items-center gap-1.5 mt-2 text-xs text-neutral-content/55"><?= icon('clock', 'size-3.5') ?>Ciudad de México</span>
                 </div>
                 <div class="text-right">
-                    <span class="block text-[11px] tracking-widest text-neutral-content/55">TIEMPO EN JORNADA</span>
+                    <span class="block text-[11px] text-neutral-content/55">Tiempo en jornada</span>
                     <span class="block text-xl font-semibold tabular-nums" id="worked">—</span>
                 </div>
             </div>
@@ -78,7 +78,7 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
     ['salida', 'Salida', 'log-out', 'in back done'],
 ] as [$kind, $title, $iconName, $show]): ?>
                 <div class="rounded-box bg-white/[.06] border border-white/10 p-4 sm:p-5" data-show="<?= $show ?>">
-                    <div class="flex items-center justify-between text-xs text-neutral-content/65"><span class="flex items-center gap-2 tracking-wider uppercase"><?= icon($iconName, 'size-4 text-accent') ?><?= $title ?></span><span class="tabular-nums text-base font-semibold text-neutral-content" data-time="<?= $kind ?>">--:--</span></div>
+                    <div class="flex items-center justify-between text-xs text-neutral-content/65"><span class="flex items-center gap-2"><?= icon($iconName, 'size-4 text-accent') ?><?= $title ?></span><span class="tabular-nums text-base font-semibold text-neutral-content" data-time="<?= $kind ?>">--:--</span></div>
                     <button class="btn btn-lg w-full mt-4 border-0 bg-white text-neutral hover:bg-secondary disabled:bg-white/10! disabled:text-white/55!" data-punch="<?= $kind ?>" type="button" disabled><span class="js-text">Registrar <?= mb_strtolower($title) ?></span><?= icon($iconName, 'size-5') ?></button>
                 </div>
 <?php endforeach; ?>
@@ -89,7 +89,7 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
                 <button class="btn btn-lg w-full gap-2 border border-white/25 bg-white/[.08] text-neutral-content hover:bg-white/15" id="visit-open" type="button"><?= icon('stethoscope', 'size-5') ?>Registrar visita</button>
                 <div class="rounded-box bg-accent/20 border border-accent/40 p-4" id="visit-live" hidden>
                     <div class="flex items-center justify-between gap-3">
-                        <span class="flex items-center gap-2 text-[11px] font-semibold tracking-widest text-neutral-content/70"><span class="status status-info animate-pulse"></span>VISITA EN CURSO</span>
+                        <span class="flex items-center gap-2 text-xs font-medium text-neutral-content/70"><span class="status status-info animate-pulse"></span>Visita en curso</span>
                         <span class="text-2xl font-light tabular-nums" id="visit-live-timer">00:00:00</span>
                     </div>
                     <div class="flex items-center justify-between gap-3 mt-2">
@@ -137,7 +137,7 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
                 <h3 class="text-2xl font-bold">¿Terminar tu jornada?</h3>
                 <p class="text-base-content/70">Vas a registrar tu <b>salida de labores</b> a las <b class="tabular-nums" id="exit-time">--:--</b>.</p>
                 <div class="w-full rounded-box bg-base-200 px-4 py-3">
-                    <div class="text-[11px] font-semibold tracking-widest text-base-content/50">TIEMPO TRABAJADO HOY</div>
+                    <div class="text-xs font-medium text-base-content/50">Tiempo trabajado hoy</div>
                     <div class="text-2xl font-bold tabular-nums mt-0.5" id="exit-worked">—</div>
                 </div>
                 <p class="text-sm text-error font-medium flex items-start gap-1.5 text-left"><?= icon('circle-alert', 'size-4 shrink-0 mt-0.5') ?>Después de registrarla ya no podrás registrar más movimientos hoy.</p>
@@ -189,7 +189,7 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
                     <textarea class="textarea w-full" id="visit-comments" rows="3" maxlength="2000" placeholder="Temas tratados, muestras entregadas, acuerdos…"></textarea>
                 </label>
                 <div class="rounded-box bg-base-200 p-5 text-center">
-                    <div class="text-[11px] font-semibold tracking-widest text-base-content/50" id="visit-state">LISTO PARA INICIAR</div>
+                    <div class="text-xs font-medium text-base-content/50" id="visit-state">Listo para iniciar</div>
                     <div class="text-5xl font-light tabular-nums mt-1" id="visit-timer">00:00:00</div>
                     <div class="text-sm text-base-content/60 mt-1 min-h-5" id="visit-times"></div>
                 </div>
@@ -212,7 +212,7 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
                 <h3 class="text-2xl font-bold">¿Finalizar la visita?</h3>
                 <p class="text-base-content/70">Vas a registrar el <b>fin de tu visita</b> con <b id="visit-end-doctor"></b> a las <b class="tabular-nums" id="visit-end-time">--:--</b>.</p>
                 <div class="w-full rounded-box bg-base-200 px-4 py-3">
-                    <div class="text-[11px] font-semibold tracking-widest text-base-content/50">DURACIÓN DE LA VISITA</div>
+                    <div class="text-xs font-medium text-base-content/50">Duración de la visita</div>
                     <div class="text-2xl font-bold tabular-nums mt-0.5" id="visit-end-duration">—</div>
                 </div>
                 <p class="text-sm text-error font-medium flex items-start gap-1.5 text-left"><?= icon('circle-alert', 'size-4 shrink-0 mt-0.5') ?>Una vez finalizada ya no podrás modificarla.</p>
@@ -228,7 +228,7 @@ if ($user['rol'] === 'admin' || !$user['registra']) {
 <?php endif; ?>
 </main>
 <footer class="footer sm:footer-horizontal justify-between items-center px-4 sm:px-[6%] py-5 border-t border-base-300 text-xs text-base-content/50">
-    <span class="font-semibold tracking-widest">ASISTENCIA</span>
+    <span class="font-semibold">Asistencia</span>
     <span>Un día a la vez.</span>
 </footer>
 </body>

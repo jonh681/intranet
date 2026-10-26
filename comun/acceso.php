@@ -5,17 +5,17 @@ declare(strict_types=1);
  * Quién entra a qué en la intranet. Un solo lugar para las reglas; nadie las elige a mano: salen del rol y el puesto
  * de la cuenta (tabla usuarios: rol y puesto, se asignan en Usuarios → Editar).
  *
- *   Puesto de un empleado o gerente   Tickets   Asistencia            Incidencias
- *     Representante médico              sí       registra jornada       sí
- *     Dermoconsejera                    —        registra jornada       sí
- *     Oficina                           sí       —                      sí
+ *   Puesto de un empleado o gerente   Tickets   Asistencia            Incidencias   Cotizaciones
+ *     Representante médico              sí       registra jornada       sí            cotiza y envía pedidos
+ *     Dermoconsejera                    —        registra jornada       sí            —
+ *     Oficina                           sí       —                      sí            —
  *
  *   Rol
  *     empleado      lo de su puesto.
  *     gerente       lo de su puesto + ve a su equipo en asistencia y en incidencias (su equipo = quienes lo tienen como jefe directo).
  *     soporte       solo su panel de soporte en tickets.
  *     supervision   reportes de tickets, administra asistencia e incidencias y la pestaña Usuarios.
- *     superusuario  todo, además Seguridad.
+ *     superusuario  todo, además Seguridad y la administración de Cotizaciones (productos, lista de precios y clientes).
  *
  * Las incidencias las autoriza primero el jefe directo (correo_jefe) y las confirma quien valida: los correos de
  * asistencia/config.php > mail > cc (Administración).
@@ -56,6 +56,17 @@ function intranet_rol_incidencias(array $u): ?string
     if ((int)$u['activo'] !== 1 || $u['rol'] === 'soporte') return null;
     if (in_array($u['rol'], ['superusuario', 'supervision'], true)) return 'admin';
     return $u['rol'] === 'gerente' ? 'gerente' : 'empleado';
+}
+
+/**
+ * Rol en cotizaciones ('representante' o 'admin') o null. Solo los representantes médicos (empleado o gerente con puesto
+ * de representante) cotizan y envían pedidos; el superusuario además administra productos, lista de precios y clientes.
+ */
+function intranet_rol_cotizaciones(array $u): ?string
+{
+    if ((int)$u['activo'] !== 1) return null;
+    if ($u['rol'] === 'superusuario') return 'admin';
+    return in_array($u['rol'], ['empleado', 'gerente'], true) && $u['puesto'] === 'representante' ? 'representante' : null;
 }
 
 /** Ve Tickets: todos, menos las dermoconsejeras. */
@@ -123,12 +134,13 @@ function intranet_usuario(PDO $db): ?array
     return $u;
 }
 
-/** Apps visibles para la persona: ['tickets' => bool, 'asistencia' => bool, 'incidencias' => bool, 'seguridad' => bool]. */
+/** Apps visibles para la persona: ['tickets' => bool, 'asistencia' => bool, 'incidencias' => bool, 'cotizaciones' => bool, 'seguridad' => bool]. */
 function intranet_apps(array $u, bool $incidenciasActivas = true): array
 {
     $active = (int)$u['activo'] === 1;
     return ['tickets' => intranet_ve_tickets($u), 'asistencia' => intranet_rol_asistencia($u) !== null,
         'incidencias' => $incidenciasActivas && intranet_rol_incidencias($u) !== null,
+        'cotizaciones' => intranet_rol_cotizaciones($u) !== null,
         'seguridad' => $active && in_array($u['rol'], ['superusuario', 'supervision'], true)];
 }
 

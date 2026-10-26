@@ -69,7 +69,7 @@ $query = http_build_query(['k' => $kind, 'id' => $id, 't' => $token]);
         <a class="btn btn-primary mt-2" href="equipo.php">Ir a Incidencias de mi equipo</a>
     </div></section>
 <?php else: ?>
-    <section class="card bg-base-100 border border-base-300 shadow-xl shadow-base-300/40 overflow-hidden">
+    <section class="card bg-base-100 border border-base-300 overflow-hidden">
 <?php if ($done === 'autorizar'): ?>
         <div class="bg-success text-success-content px-6 py-5 flex items-center gap-3">
             <?= icon('check', 'size-7 shrink-0') ?>
@@ -81,7 +81,7 @@ $query = http_build_query(['k' => $kind, 'id' => $id, 't' => $token]);
         </div>
 <?php else: ?>
         <div class="bg-neutral text-neutral-content px-6 py-5">
-            <div class="text-[11px] font-semibold tracking-widest text-neutral-content/60">SOLICITUD DE TU EQUIPO</div>
+            <div class="text-xs font-medium text-neutral-content/60">Solicitud de tu equipo</div>
             <h1 class="text-xl sm:text-2xl font-bold mt-1"><?= esc($request['user']['name']) ?> solicitó <?= esc($asked) ?></h1>
         </div>
 <?php endif; ?>

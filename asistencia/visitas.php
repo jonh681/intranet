@@ -20,11 +20,11 @@ $user = requireAdminPage($db);
 <?= adminHeader($user, 'visitas') ?>
 
 <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 flex flex-col gap-5">
-    <section class="relative overflow-hidden rounded-box bg-neutral text-neutral-content shadow-xl shadow-neutral/20 p-5 sm:p-7 animate-pop-in">
+    <section class="relative overflow-hidden rounded-box bg-neutral text-neutral-content p-5 sm:p-7 animate-pop-in">
         <div class="pointer-events-none absolute -right-20 -top-28 size-80 rounded-full bg-warning/20 blur-3xl" aria-hidden="true"></div>
         <div class="relative flex flex-wrap items-end justify-between gap-3">
             <div>
-                <div class="text-[11px] font-semibold tracking-widest text-neutral-content/60">VISITAS MÉDICAS</div>
+                <div class="text-xs font-medium text-neutral-content/60">Visitas médicas</div>
                 <h1 class="text-2xl sm:text-3xl font-bold mt-1" id="range-title">Hoy</h1>
             </div>
             <span class="badge badge-ghost gap-1.5" id="open-badge" hidden><span class="status status-info animate-pulse"></span><span data-kpi="open">0</span> en curso</span>
@@ -92,7 +92,7 @@ $user = requireAdminPage($db);
 </dialog>
 
 <footer class="flex flex-wrap gap-2 justify-between items-center px-4 sm:px-[4%] py-5 border-t border-base-300 text-xs text-base-content/50">
-    <span class="font-semibold tracking-widest">ASISTENCIA</span>
+    <span class="font-semibold">Asistencia</span>
     <span>Panel de administración</span>
 </footer>
 </body>

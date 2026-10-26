@@ -91,7 +91,7 @@ if (document.body.dataset.authenticated === '1') {
     function clock() {
         const now = new Date();
         $('#clock').textContent = now.toLocaleTimeString('es-MX', {timeZone: zone, hour12: false});
-        $('#today-label').textContent = now.toLocaleDateString('es-MX', {timeZone: zone, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}).toUpperCase();
+        $('#today-label').textContent = now.toLocaleDateString('es-MX', {timeZone: zone, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}).replace(/^./, c => c.toUpperCase());
         $('#worked').textContent = worked(now);
         if (isRep) tickVisit(now);
     }
@@ -252,7 +252,7 @@ if (document.body.dataset.authenticated === '1') {
         if (open) $('#visit-doctor').value = open.doctor;
         $('#visit-start').disabled = busy || !!open || !canStart;
         $('#visit-end').disabled = busy || !open;
-        $('#visit-state').textContent = open ? 'VISITA EN CURSO' : finished ? 'VISITA FINALIZADA' : 'LISTO PARA INICIAR';
+        $('#visit-state').textContent = open ? 'Visita en curso' : finished ? 'Visita finalizada' : 'Listo para iniciar';
         $('#visit-times').textContent = !shown ? '' : open ? `Inicio ${formatTime(open.started_at)}`
             : `${shown.doctor} · ${formatTime(shown.started_at)} – ${formatTime(shown.ended_at)} · ${duration(elapsed(shown))}`;
         $('#visit-start').textContent = finished && !open ? 'Nueva visita' : 'Inicio de visita';

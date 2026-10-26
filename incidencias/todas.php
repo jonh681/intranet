@@ -22,7 +22,7 @@ echo incHeader($db, $user, 'todas.php', 'Todas las incidencias');
 ?>
 <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
     <?= incTitle('Administración', 'Todas las incidencias', 'Historial completo de vacaciones, permisos e incapacidades de todas las personas.',
-        '<button type="button" id="open-inc" class="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700">+ Registrar para alguien</button>') ?>
+        '<button type="button" id="open-inc" class="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">+ Registrar para alguien</button>') ?>
     <div id="notice" class="mt-6 rounded-xl border px-4 py-3 text-sm" role="status" hidden></div>
 
     <div class="mt-8 grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-5" id="filters">
@@ -52,7 +52,7 @@ echo incHeader($db, $user, 'todas.php', 'Todas las incidencias');
                 <button type="button" id="month-today" class="ml-1 rounded-[10px] border border-slate-200 px-3 py-1 text-sm font-medium hover:bg-slate-100">Hoy</button>
             </div>
         </div>
-        <div class="mb-1.5 grid grid-cols-7 gap-1 text-center text-[11px] font-semibold text-slate-400 sm:gap-2 sm:text-xs"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
+        <div class="mb-1.5 grid grid-cols-7 gap-1 text-center text-xs font-medium text-slate-400 sm:gap-2 sm:text-xs"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
         <div class="grid grid-cols-7 gap-1 sm:gap-2" id="month-grid"></div>
         <p class="mt-3 text-xs text-slate-500">Haz clic en un día para ver quién tiene vacaciones, permiso o incapacidad ese día. Los festivos aparecen tachados.</p>
     </section>
@@ -62,7 +62,7 @@ echo incHeader($db, $user, 'todas.php', 'Todas las incidencias');
     </div>
     <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
         <table class="w-full min-w-[52rem] text-left text-sm">
-            <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500"><tr>
+            <thead class="bg-slate-50 text-xs text-slate-500"><tr>
                 <th class="px-4 py-3 font-semibold">Persona</th><th class="px-4 py-3 font-semibold">Tipo</th><th class="px-4 py-3 font-semibold">Fechas</th>
                 <th class="px-4 py-3 font-semibold">Días</th><th class="px-4 py-3 font-semibold">Estado</th><th class="px-4 py-3 font-semibold">Detalle</th>
             </tr></thead>
@@ -77,7 +77,7 @@ echo incHeader($db, $user, 'todas.php', 'Todas las incidencias');
         <div class="pointer-events-none absolute -right-16 -top-24 size-64 rounded-full bg-accent/25 blur-3xl" aria-hidden="true"></div>
         <div class="relative flex items-start justify-between gap-3">
             <div class="min-w-0">
-                <div class="text-[11px] font-semibold uppercase tracking-widest text-white/60" id="day-kicker">Detalle del día</div>
+                <div class="text-xs font-medium text-white/60" id="day-kicker">Detalle del día</div>
                 <h2 class="mt-0.5 text-xl font-bold sm:text-2xl" id="day-title"></h2>
             </div>
             <div class="flex shrink-0 items-center gap-1">

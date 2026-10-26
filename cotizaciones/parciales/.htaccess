@@ -1,0 +1,2 @@
+# Vistas que solo incluye PHP (index.php y las páginas de administración).
+Require all denied

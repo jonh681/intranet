@@ -226,7 +226,7 @@ $alerts = ['login_fallido', 'login_bloqueado', 'codigo_fallido', 'codigo_no_envi
         </div>
         <div class="mt-4 overflow-x-auto">
             <table class="w-full min-w-[60rem] text-left text-sm">
-                <thead class="bg-slate-50 text-xs font-medium tracking-wide text-slate-500 uppercase"><tr><th class="px-5 py-3">Empleado</th><th class="px-3 py-3">Área</th><th class="px-3 py-3">Rol en tickets</th><th class="px-3 py-3">Puesto y accesos</th><th class="px-3 py-3">Estado</th><th class="px-3 py-3">Tickets</th><th class="px-5 py-3 text-right">Acciones</th></tr></thead>
+                <thead class="bg-slate-50 text-xs font-semibold text-slate-500"><tr><th class="px-5 py-3">Empleado</th><th class="px-3 py-3">Área</th><th class="px-3 py-3">Rol en tickets</th><th class="px-3 py-3">Puesto y accesos</th><th class="px-3 py-3">Estado</th><th class="px-3 py-3">Tickets</th><th class="px-5 py-3 text-right">Acciones</th></tr></thead>
                 <tbody class="divide-y divide-slate-100" id="user-list" data-paginar>
                 <?php foreach ($employees ?? [] as $employee):
                     $name = $employee['nombre_usuario'] ?: $employee['correo_usuario'];
@@ -313,7 +313,7 @@ $alerts = ['login_fallido', 'login_bloqueado', 'codigo_fallido', 'codigo_no_envi
         </div>
         <div class="overflow-x-auto">
             <table class="w-full min-w-[48rem] text-left text-sm">
-                <thead class="bg-slate-50 text-xs font-medium tracking-wide text-slate-500 uppercase"><tr><th class="px-5 py-3">Fecha</th><th class="px-3 py-3">Usuario</th><th class="px-3 py-3">Evento</th><th class="px-3 py-3">Detalle</th><th class="px-5 py-3">IP</th></tr></thead>
+                <thead class="bg-slate-50 text-xs font-semibold text-slate-500"><tr><th class="px-5 py-3">Fecha</th><th class="px-3 py-3">Usuario</th><th class="px-3 py-3">Evento</th><th class="px-3 py-3">Detalle</th><th class="px-5 py-3">IP</th></tr></thead>
                 <tbody class="divide-y divide-slate-100" data-paginar>
                 <?php foreach ($events ?? [] as $event): $alert = in_array($event['accion'], $alerts, true); ?>
                     <tr class="<?= $alert ? 'bg-red-50/60' : '' ?>">

@@ -1,0 +1,67 @@
+/*
+ * Tema común de Fedele 360 para las apps con Tailwind (tickets, incidencias y asistencia): claro y luminoso.
+ * Lo importa la fuente de cada app (tickets/css/tailwind.css, incidencias/css/tailwind.css, asistencia/assets/src/input.css);
+ * se compila con tools/compilar_css.bat.
+ *
+ *   Color: azul Fedele #1F52C4 para la acción y lo seleccionado; tinta #0F2A5F para el texto fuerte; fondo #F7F9FC con una
+ *          luz azul suave que baja de la barra. Los grises (slate) tienen tinte azul: el HTML existente cambia de tono sin tocarlo.
+ *   Capas: paneles blancos con una línea azulada; sombra solo, y muy suave, en lo que flota (menús y ventanas).
+ *   Tipografía: Instrument Sans; cifras grandes tabulares.
+ */
+@font-face { font-family: "Instrument Sans"; font-style: normal; font-weight: 400 700; font-stretch: 75% 100%; font-display: swap;
+    src: url("../../comun/fuentes/instrument-sans-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Instrument Sans"; font-style: normal; font-weight: 400 700; font-stretch: 75% 100%; font-display: swap;
+    src: url("../../comun/fuentes/instrument-sans-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+@theme {
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    --color-ink: #0f2a5f;
+    --color-ink-deep: #0b1f47;
+    --color-paper: #f7f9fc;
+
+    --color-slate-50: #f7f9fc;
+    --color-slate-100: #eff3f9;
+    --color-slate-200: #e3e9f4;
+    --color-slate-300: #cdd6e6;
+    --color-slate-400: #97a4ba;
+    --color-slate-500: #66768f;
+    --color-slate-600: #4c5b73;
+    --color-slate-700: #36445b;
+    --color-slate-800: #232f44;
+    --color-slate-900: #142037;
+    --color-slate-950: #0a1528;
+
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 9px;
+    --radius-xl: 12px;
+    --radius-2xl: 14px;
+    --radius-3xl: 18px;
+
+    --shadow-2xs: 0 0 #0000;
+    --shadow-xs: 0 1px 1px rgb(15 42 95 / .04);
+    --shadow-sm: 0 1px 2px rgb(15 42 95 / .05);
+    --shadow-md: 0 1px 2px rgb(15 42 95 / .05);
+    --shadow-lg: 0 0 0 1px rgb(15 42 95 / .05), 0 16px 32px -14px rgb(15 42 95 / .22);
+    --shadow-xl: 0 0 0 1px rgb(15 42 95 / .05), 0 20px 40px -16px rgb(15 42 95 / .25);
+    --shadow-2xl: 0 0 0 1px rgb(15 42 95 / .05), 0 32px 64px -24px rgb(15 42 95 / .32);
+}
+
+@layer base {
+    html { font-family: var(--font-sans); }
+    /* Luz azul suave que baja de la barra superior. */
+    body { background-image: radial-gradient(1100px 420px at 50% -180px, #e6eeff 0%, rgb(230 238 255 / 0) 70%); background-repeat: no-repeat; }
+    h1, h2, h3 { letter-spacing: -.02em; }
+    /* Cifras grandes (saldos, contadores, totales): tabulares y con interletra cerrada. */
+    :is(p, div, span, dd, strong, output).text-3xl, :is(p, div, span, dd, strong, output).text-4xl, :is(p, div, span, dd, strong, output).text-5xl {
+        font-weight: 650; letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+    }
+    :is(p, div, span, dd, strong, output):is(.text-3xl, .text-4xl, .text-5xl) :is(span, small) { font-weight: 500; letter-spacing: 0; }
+    ::selection { background: #c9d9fb; color: #0b1f47; }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+}

@@ -16,12 +16,12 @@ if (!intranet_dev()) {
 
 // Tipos de usuario y quién los representa en la base (condición sobre la tabla usuarios).
 $types = [
-    'superusuario' => ['Superusuario', 'Todo: Tickets (con Seguridad), Asistencia e Incidencias.', "rol = 'superusuario'"],
+    'superusuario' => ['Superusuario', 'Todo: Tickets (con Seguridad), Asistencia, Incidencias y Cotizaciones (con productos, precios y clientes).', "rol = 'superusuario'"],
     'soporte' => ['Soporte', 'Solo Tickets: Mis tickets y Panel de soporte.', "rol = 'soporte'"],
     'supervision' => ['Supervisión', 'Reportes de tickets, administración de asistencia y todo Incidencias (valida solo quien tiene el permiso).', "rol = 'supervision'"],
     'gerente' => ['Gerente de ventas', 'Lo de su puesto, más su equipo (quienes lo tienen como jefe directo) en Asistencia e Incidencias.', "rol = 'gerente' AND puesto IN ('representante', 'dermoconsejera')"],
     'gerente_oficina' => ['Gerente de oficina', 'Tickets e Incidencias, más su equipo en Incidencias (no ve Asistencia).', "rol = 'gerente' AND puesto = 'oficina'"],
-    'representante' => ['Representante médico', 'Tickets, Asistencia (jornada y visitas) e Incidencias.', "rol = 'empleado' AND puesto = 'representante'"],
+    'representante' => ['Representante médico', 'Tickets, Asistencia (jornada y visitas), Incidencias y Cotizaciones.', "rol = 'empleado' AND puesto = 'representante'"],
     'dermoconsejera' => ['Dermoconsejera', 'Asistencia e Incidencias (sin Tickets).', "rol = 'empleado' AND puesto = 'dermoconsejera'"],
     'empleado' => ['Oficina', 'Tickets e Incidencias (no registra asistencia).', "rol = 'empleado' AND puesto = 'oficina'"],
 ];
@@ -68,7 +68,7 @@ $current = $_SESSION['user'] ?? null;
 <body>
 <main class="dev">
     <img class="dev-logo" src="tickets/img/logo-mediano.png" alt="Fedele">
-    <p class="dev-flag">MODO DESARROLLO · sin contraseña · solo en esta computadora</p>
+    <p class="dev-flag">Modo desarrollo: sin contraseña, solo en esta computadora</p>
     <h1>¿Con qué tipo de usuario quieres entrar?</h1>
     <p class="dev-lead">Entras como una persona real de la base con ese tipo de usuario. Siempre empiezas en Tickets.
         <?php if ($current): ?>Ahora estás como <strong><?= escape((string)$current['name']) ?></strong>.<?php endif; ?></p>
