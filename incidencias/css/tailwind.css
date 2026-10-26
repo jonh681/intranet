@@ -18,7 +18,7 @@
     --color-brand-900: #1b336b;
     --color-brand-950: #13213f;
     /* Colores de asistencia: así el calendario para elegir días se ve igual al de asistencia */
-    --color-navy: #0b1f3a;
+    --color-navy: #163a8f; /* mismo azul profundo que los paneles de asistencia */
     --color-primary: #13315c;
     --color-secondary: #e6ecf6;
     --color-accent: #5b8bd9;

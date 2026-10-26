@@ -31,7 +31,7 @@ unset($_SESSION['error'], $_SESSION['email'], $_SESSION['login_notice']);
         <div class="max-w-xl">
             <h1 class="text-5xl leading-[1.05] font-semibold tracking-tight xl:text-6xl">Todo tu trabajo, en un solo lugar.</h1>
             <dl class="mt-12 text-[15px]">
-                <?php foreach (['Tickets' => 'Reporta un problema y sigue su atención', 'Asistencia' => 'Registra tu jornada y tus visitas', 'Incidencias' => 'Vacaciones, permisos e incapacidades', 'Cotizaciones' => 'Precios, cotizaciones y pedidos'] as $app => $what): ?>
+                <?php foreach (['Soporte' => 'Reporta un problema y sigue su atención', 'Asistencia' => 'Registra tu jornada y tus visitas', 'Incidencias' => 'Vacaciones, permisos e incapacidades', 'Cotizaciones' => 'Precios, cotizaciones y pedidos'] as $app => $what): ?>
                 <div class="grid grid-cols-[8rem_1fr] gap-4 border-b border-ink/10 py-3.5"><dt class="font-semibold text-brand-700"><?= $app ?></dt><dd class="text-slate-600"><?= $what ?></dd></div>
                 <?php endforeach; ?>
             </dl>

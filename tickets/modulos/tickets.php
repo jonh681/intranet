@@ -17,6 +17,7 @@ unset($_SESSION['ticket_error'], $_SESSION['ticket_success'], $_SESSION['ticket_
 $_SESSION['ticket_form_token'] = $_SESSION['ticket_form_token'] ?? bin2hex(random_bytes(32));
 $tickets = [];
 $evidence = [];
+$history = [];
 $loadError = false;
 try {
     $db = database();
@@ -32,6 +33,13 @@ try {
         $query->execute($ids);
         foreach ($query->fetchAll() as $file) {
             $evidence[$file['ticket_id']][] = $file;
+        }
+        // Seguimiento de soporte (validación y solución), el mismo que ve soporte en su panel.
+        $query = $db->prepare('SELECT s.ticket_id, s.accion, s.comentario, s.fecha, u.nombre_usuario FROM ticket_seguimiento s
+            JOIN usuarios u ON u.id = s.usuario_id WHERE s.ticket_id IN (' . $marks . ') ORDER BY s.id');
+        $query->execute($ids);
+        foreach ($query->fetchAll() as $paso) {
+            $history[$paso['ticket_id']][] = $paso;
         }
     }
 } catch (Throwable $exception) {
@@ -108,9 +116,17 @@ $step = 0;
                     <?php endforeach; ?>
                     </div>
                     <p class="mt-3 line-clamp-2 px-5 text-sm text-slate-600"><?= escape($ticket['descripcion']) ?></p>
+                    <?php $pasos = $history[$ticket['id']] ?? []; $solution = array_values(array_filter($pasos, fn($s) => $s['accion'] === 'resolver'))[0] ?? null; ?>
+                    <?php if ($solution): ?>
+                        <div class="mx-5 mt-4 rounded-xl bg-emerald-50 px-4 py-3 ring-1 ring-emerald-100 ring-inset">
+                            <p class="text-xs font-semibold text-emerald-800">Solución de soporte</p>
+                            <p class="mt-1 text-sm whitespace-pre-wrap text-slate-800 [overflow-wrap:anywhere]"><?= escape($solution['comentario']) ?></p>
+                            <p class="mt-1.5 text-xs text-emerald-800/80"><?= escape($solution['nombre_usuario']) ?>, <?= escape(date('d/m/Y H:i', strtotime($solution['fecha']))) ?></p>
+                        </div>
+                    <?php endif; ?>
                     <details class="group mt-4 border-t border-slate-100">
                         <summary class="flex items-center justify-between px-5 py-3 text-sm font-medium text-brand-700 hover:bg-slate-50">
-                            Ver descripción y evidencias
+                            Ver detalles y seguimiento
                             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" class="size-4 transition-transform group-open:rotate-180" aria-hidden="true"><path d="m5 7.5 5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </summary>
                         <div class="space-y-4 px-5 pb-5">
@@ -126,6 +142,20 @@ $step = 0;
                                 <?php endforeach; ?>
                                 </div>
                             <?php else: ?><p class="text-sm text-slate-400">Sin imágenes adjuntas.</p><?php endif; ?>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900">Seguimiento de soporte</p>
+                                <ol class="mt-2 space-y-3 border-l-2 border-slate-200 pl-4">
+                                    <li class="text-sm text-slate-600"><span class="font-medium text-slate-800">Solicitud creada</span> · <?= escape(date('d/m/Y H:i', strtotime($ticket['creado_en']))) ?></li>
+                                    <?php foreach ($pasos as $paso): ?>
+                                    <li class="text-sm text-slate-600">
+                                        <span class="font-medium text-slate-800"><?= $paso['accion'] === 'validar' ? 'Validado, en atención' : 'Resuelto' ?></span>
+                                        por <?= escape($paso['nombre_usuario']) ?> · <?= escape(date('d/m/Y H:i', strtotime($paso['fecha']))) ?>
+                                        <?php if (trim((string)$paso['comentario']) !== ''): ?><span class="mt-0.5 block whitespace-pre-wrap text-slate-700 [overflow-wrap:anywhere]"><?= escape($paso['comentario']) ?></span><?php endif; ?>
+                                    </li>
+                                    <?php endforeach; ?>
+                                    <?php if (!$pasos): ?><li class="text-sm text-slate-500">Soporte aún no revisa tu solicitud.</li><?php endif; ?>
+                                </ol>
+                            </div>
                         </div>
                     </details>
                 </article>
