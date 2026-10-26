@@ -26,7 +26,7 @@ Archivos de esta carpeta:
    - *Agregar usuario a la base*: elige **solo** `SELECT`, `INSERT`, `UPDATE` y `DELETE`. La aplicación no necesita más
      (la página Seguridad avisa si tiene permisos de sobra).
 2. cPanel → **phpMyAdmin** → elige `{USUARIO}_intranet` en la izquierda → pestaña **Importar** → `intranet.sql` → **Importar**.
-   Debe terminar sin errores y mostrar 15 tablas y 2 vistas (`asistencia_usuarios`, `personal_usuarios`).
+   Debe terminar sin errores y mostrar 21 tablas y 2 vistas (`asistencia_usuarios`, `personal_usuarios`).
 
 ## 2. Configuración privada
 
@@ -65,6 +65,7 @@ powershell -ExecutionPolicy Bypass -File tools\empaquetar.ps1 -Dominio {DOMINIO}
 
 Genera solo `intranet.zip` (sin la base, la configuración ni las evidencias). Súbelo a `public_html` y extráelo aceptando reemplazar.
 **Nunca vuelvas a importar un `intranet.sql` en el servidor: borraría los datos reales.**
+La guía completa de actualización (respaldo, código, base y pruebas) está en `tools/ACTUALIZAR_SERVIDOR.md`; el empaquetador la incluye como `PASOS.md`.
 Si un cambio necesita modificar la base, se hace con `instalar/migraciones.php` (por Terminal de cPanel:
 `php ~/public_html/intranet/instalar/migraciones.php`, con un usuario de base que tenga permiso `ALTER`).
 

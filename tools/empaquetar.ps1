@@ -48,7 +48,15 @@ try {
     }
 } finally { $zip.Dispose() }
 Write-Host "intranet.zip: $count archivos"
-if ($SoloCodigo) { Write-Host "Listo (solo código): $out"; return }
+if ($SoloCodigo) {
+    # Guía de actualización (respaldo, código, migraciones, pruebas) con el dominio y el usuario de cPanel.
+    $update = Join-Path $PSScriptRoot 'ACTUALIZAR_SERVIDOR.md'
+    if (Test-Path $update) {
+        [IO.File]::WriteAllText((Join-Path $out 'PASOS.md'), [IO.File]::ReadAllText($update, $utf8).Replace('{DOMINIO}', $Dominio.TrimEnd('/')).Replace('{USUARIO}', $UsuarioCpanel), $utf8)
+    }
+    Write-Host "Listo (solo código): $out"
+    return
+}
 
 # ---------- 2. Base de datos ----------
 $dump = 'C:\xampp\mysql\bin\mysqldump.exe'
