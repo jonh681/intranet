@@ -6,6 +6,7 @@ body { margin: 0; min-height: 100vh; background: #fff; color: #142037; font: 15p
 .dev-flag { display: inline-block; margin: 28px 0 0; padding: 4px 10px; border-radius: 9px; border: 1px dashed #c98b17; color: #7a4f05; font-size: 13px; font-weight: 600; }
 .dev h1 { margin: 14px 0 6px; font-size: 40px; line-height: 1.05; font-weight: 600; letter-spacing: -.015em; }
 .dev-lead { margin: 0 0 32px; max-width: 70ch; color: #5b6b82; }
+.dev-real { color: #1f52c4; font-weight: 600; }
 .dev-error { padding: 12px 16px; border-radius: 9px; background: #fbecea; color: #7d2216; }
 .dev-grid { display: grid; border-top: 1px solid #cdd6e6; }
 .dev-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px) 260px; grid-template-rows: auto auto; column-gap: 24px; align-items: center;

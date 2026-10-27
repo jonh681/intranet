@@ -6,8 +6,10 @@ if (isset($_SESSION['user'])) {
     exit;
 }
 // Modo desarrollo de la intranet: en lugar del login se elige el tipo de usuario (dev.php).
+// Con ?real se ve el inicio de sesión de verdad (capturas para manuales) hasta entrar o salir; en el servidor no aplica.
 require_once __DIR__ . '/../../comun/acceso.php';
-if (intranet_dev()) {
+if (intranet_dev() && isset($_GET['real'])) $_SESSION['login_real'] = true;
+if (intranet_dev() && empty($_SESSION['login_real'])) {
     header('Location: ../../dev.php');
     exit;
 }

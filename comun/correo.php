@@ -17,6 +17,7 @@ require_once __DIR__ . '/PHPMailer/Exception.php';
 require_once __DIR__ . '/PHPMailer/PHPMailer.php';
 require_once __DIR__ . '/PHPMailer/SMTP.php';
 require_once __DIR__ . '/../tickets/php/env.php';
+require_once __DIR__ . '/acceso.php'; // intranet_dev()
 
 const INTRANET_CORREOS_DIR = __DIR__ . '/../correos';
 const INTRANET_REMITENTE = 'no-responder@fedele.com.mx';
@@ -25,7 +26,7 @@ const INTRANET_REMITENTE = 'no-responder@fedele.com.mx';
  * $to, $cc: correos ('ana@fedele.com.mx') o personas (['name' => 'Ana', 'email' => 'ana@fedele.com.mx']).
  * $opt: text (versión sin formato; si falta se saca del HTML), from_name, reply_to, urgent (prioridad alta),
  *       attachments ([['contenido', 'nombre', 'mime']]), bcc (copias ocultas; en modo prueba no se usan)
- *       e ignorar_prueba (códigos y enlaces de contraseña: solo al dueño).
+ *       e ignorar_prueba (códigos y enlaces de contraseña: solo al dueño, salvo en modo desarrollo).
  * Nunca lanza excepción: un correo fallido no debe impedir guardar lo que se hizo. Devuelve true si salió.
  */
 function intranet_correo(array $to, array $cc, string $subject, string $html, array $opt = []): bool
@@ -48,7 +49,9 @@ function intranet_correo(array $to, array $cc, string $subject, string $html, ar
     }
 
     $test = env('TICKETS_MODO_PRUEBA');
-    if (filter_var($test, FILTER_VALIDATE_EMAIL) && empty($opt['ignorar_prueba'])) {
+    // En modo desarrollo (solo en la computadora local, comun/acceso.php) también los códigos y enlaces de contraseña van al
+    // buzón de pruebas: así se prueban y se capturan los flujos de cualquier persona sin escribirle a nadie.
+    if (filter_var($test, FILTER_VALIDATE_EMAIL) && (empty($opt['ignorar_prueba']) || intranet_dev())) {
         // Modo prueba: solo llega al buzón de pruebas; se anota a quién iba en realidad.
         $list = static fn(array $l): string => implode(', ', array_keys($l));
         $note = 'Correo de prueba. En producción iría a: ' . $list($to) . ($cc ? ' · CC: ' . $list($cc) : '');

@@ -71,7 +71,8 @@ $current = $_SESSION['user'] ?? null;
     <p class="dev-flag">Modo desarrollo: sin contraseña, solo en esta computadora</p>
     <h1>¿Con qué tipo de usuario quieres entrar?</h1>
     <p class="dev-lead">Entras como una persona real de la base con ese tipo de usuario. Siempre empiezas en Tickets.
-        <?php if ($current): ?>Ahora estás como <strong><?= escape((string)$current['name']) ?></strong>.<?php endif; ?></p>
+        <?php if ($current): ?>Ahora estás como <strong><?= escape((string)$current['name']) ?></strong>.<?php endif; ?>
+        <?php if (!$current): ?><br><a class="dev-real" href="tickets/modulos/login.php?real">Ver el inicio de sesión real</a> (con correo y contraseña, para capturas de los manuales).<?php endif; ?></p>
     <?php if ($error): ?><p class="dev-error" role="alert"><?= escape($error) ?></p><?php endif; ?>
     <div class="dev-grid">
     <?php foreach ($types as $key => [$label, $summary]): ?>

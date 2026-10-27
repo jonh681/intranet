@@ -105,7 +105,9 @@ try {
     if (role_requires_code($account['rol']) && access_code_enabled()) {
         session_regenerate_id(true);
         $_SESSION = ['csrf' => bin2hex(random_bytes(32)), 'last_activity' => time(), 'created' => time(),
-            'pending_login' => ['user' => $account, 'started' => time()]];
+            'pending_login' => ['user' => $account, 'started' => time()],
+            // Inicio de sesión real en modo desarrollo (login.php?real): sigue así si se regresa al login desde el código.
+            'login_real' => !empty($_SESSION['login_real'])];
         audit('contrasena_ok', 'Falta el código de acceso', $account);
         try {
             $sent = access_code_issue($db);
