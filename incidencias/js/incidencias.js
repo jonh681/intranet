@@ -21,6 +21,8 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const between = (a, b) => { const out = []; for (let d = a; d <= b; d = addDays(d, 1)) out.push(d); return out; };
 const workdays = (dates) => dates.filter((d) => !weekend(d) && !HOLIDAYS[d]);
+// Días que descuentan unas vacaciones: hábiles o, para quien trabaja fines de semana (dermoconsejeras), todos menos festivos.
+const vacationDays = (dates, weekends) => dates.filter((d) => (weekends || !weekend(d)) && !HOLIDAYS[d]);
 const vvDate = (d) => formatDay(d, { day: 'numeric', month: 'short', year: 'numeric' });
 function period(i) {
     const dates = i.dates;
@@ -159,13 +161,16 @@ function pickerDates() {
     if (picker.type === 'permiso') return [...picker.picked].sort();
     return picker.start ? between(picker.start, picker.end || picker.start) : [];
 }
+const pickerCounted = (dates) => picker.type === 'vacaciones' ? vacationDays(dates, picker.ctx.weekends) : workdays(dates);
+// «día hábil» o, con fines de semana, solo «día».
+const countText = (n) => picker.type === 'vacaciones' && picker.ctx.weekends ? plural(n, 'día', 'días') : plural(n, 'día hábil', 'días hábiles');
 function pickerProblem() {
     const dates = pickerDates();
     if (!dates.length) return '';
     const { period: p, busy } = picker.ctx;
-    const counted = workdays(dates);
+    const counted = pickerCounted(dates);
     const clash = counted.filter((d) => busy.has(d));
-    if (!counted.length) return picker.type === 'permiso' ? 'Elige días hábiles (sin fines de semana ni festivos).' : 'Ese rango no tiene días hábiles.';
+    if (!counted.length) return picker.type === 'permiso' ? 'Elige días hábiles (sin fines de semana ni festivos).' : picker.ctx.weekends && picker.type === 'vacaciones' ? 'Ese rango solo tiene días festivos.' : 'Ese rango no tiene días hábiles.';
     if (clash.length) return `Ya hay vacaciones o incidencia el ${clash.map((d) => formatDay(d, { day: 'numeric', month: 'short' })).join(', ')}.`;
     if (picker.type === 'vacaciones' && counted.length > p.available) return `Solo hay ${plural(p.available, 'día disponible', 'días disponibles')}.`;
     return '';
@@ -182,7 +187,7 @@ function renderPicker() {
         // Los días anteriores a hoy no se pueden elegir (también lo revisa api.php).
         const past = d < TODAY;
         const inPeriod = !past && (!limited || (d >= p.start && d <= p.end));
-        const holiday = HOLIDAYS[d], off = weekend(d) || holiday;
+        const holiday = HOLIDAYS[d], off = (weekend(d) && !(limited && picker.ctx.weekends)) || holiday;
         const edge = picker.type === 'permiso' ? selected.has(d) : picker.start !== null && (d === picker.start || d === (picker.end || picker.start));
         const tone = !inPeriod ? 'bg-slate-100/60 text-slate-300 cursor-not-allowed'
             : edge ? 'bg-primary text-white font-bold'
@@ -210,8 +215,9 @@ function renderPickerSummary() {
     const long = (d) => cap(formatDay(d, { weekday: 'short', day: 'numeric', month: 'short' }));
     let text = picker.type === 'vacaciones' ? 'Elige el primer día de vacaciones.' : '';
     if (dates.length && picker.type === 'vacaciones') {
-        const counted = workdays(dates), skipped = dates.filter((d) => HOLIDAYS[d] && !weekend(d)).map((d) => HOLIDAYS[d]);
-        text = `${dates.length === 1 ? long(dates[0]) : `Del ${long(dates[0])} al ${long(dates.at(-1))}`} · ${plural(counted.length, 'día hábil', 'días hábiles')}`;
+        const counted = pickerCounted(dates), skipped = dates.filter((d) => HOLIDAYS[d] && (picker.ctx.weekends || !weekend(d))).map((d) => HOLIDAYS[d]);
+        text = `${dates.length === 1 ? long(dates[0]) : `Del ${long(dates[0])} al ${long(dates.at(-1))}`} · ${countText(counted.length)}`;
+        if (picker.ctx.weekends && dates.some(weekend)) text += ' (incluye fin de semana)';
         if (skipped.length) text += ` (no cuenta ${skipped.join(', ')})`;
         if (!picker.end) text += ' · elige el último día o deja solo este';
         if (!problem) text += ` · quedarán ${p.available - counted.length} de ${p.entitled}`;
@@ -235,7 +241,7 @@ if (modal) {
     // Contexto del calendario: la propia persona o la elegida (administración).
     const context = () => {
         const person = forOthers ? (DATA.people || []).find((x) => String(x.id) === $('#inc-person').value) : DATA.me;
-        return person ? { period: person.period, busy: new Set(person.busy), hire: person.hire_date } : null;
+        return person ? { period: person.period, busy: new Set(person.busy), hire: person.hire_date, weekends: Boolean(person.weekends) } : null;
     };
     const chooseType = () => {
         const type = form.querySelector('[name=tipo]:checked')?.value || '';
@@ -416,6 +422,40 @@ if (page === 'todas') {
         renderMonth();
     });
     dayModal.addEventListener('close', () => { day = ''; renderMonth(); });
+    // Reporte en Excel de lo que coincide con los filtros (SheetJS de asistencia: solo se descarga al pedir el primer reporte).
+    let xlsx = null;
+    const loadXlsx = () => (xlsx ??= new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = '../asistencia/assets/vendor/xlsx/xlsx.full.min.js';
+        script.onload = () => resolve(window.XLSX);
+        script.onerror = () => { xlsx = null; reject(new Error('No se pudo cargar el generador de Excel. Intenta de nuevo.')); };
+        document.head.append(script);
+    }));
+    const stamp = (v) => (v ? v.slice(0, 16).replace('T', ' ') : '');
+    $('#download-report').addEventListener('click', async (e) => {
+        const button = e.currentTarget, rows = items.filter(matches);
+        if (!rows.length) return notice('No hay incidencias con esos filtros para descargar.', true);
+        button.disabled = true;
+        try {
+            const XLSX = await loadXlsx();
+            const aoa = [['Persona', 'Área', 'Tipo', 'Detalle del tipo', 'Desde', 'Hasta', 'Fechas', 'Días', 'Estado', 'Jefe directo', 'Autorizó', 'Revisó',
+                'Registrada por', 'Registrada el', 'Comentario', 'Motivo de rechazo o cancelación', 'Comprobante'],
+                ...rows.map((i) => [i.user.name, i.user.area || '', LOOK[i.type].label,
+                    i.type === 'permiso' && i.goce !== null ? (i.goce ? 'Con goce de sueldo' : 'Sin goce de sueldo') : [i.subtype, i.folio && `Folio IMSS ${i.folio}`].filter(Boolean).join(' · '),
+                    i.dates[0] || '', i.dates.at(-1) || '', i.dates.join(', '), i.days, PILL[i.status][0], i.manager || '', i.authorized_by || '', i.reviewed_by || '',
+                    i.created_by || '', stamp(i.created_at), i.note || '', i.status === 'aprobada' ? '' : i.reason || '', i.file ? i.file.name : ''])];
+            const sheet = XLSX.utils.aoa_to_sheet(aoa);
+            sheet['!cols'] = aoa[0].map((h, c) => ({ wch: Math.min(45, Math.max(h.length, ...aoa.slice(1).map((r) => String(r[c] ?? '').length)) + 2) }));
+            sheet['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: aoa.length - 1, c: aoa[0].length - 1 } }) };
+            const book = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(book, sheet, 'Incidencias');
+            XLSX.writeFile(book, `incidencias_${TODAY}.xlsx`);
+        } catch (err) {
+            notice(err.message, true);
+        } finally {
+            button.disabled = false;
+        }
+    });
     const refresh = () => { renderMonth(); renderAll(); };
     ['#f-search', '#f-type', '#f-status', '#f-area'].forEach((s) => $(s).addEventListener('input', refresh));
     $('#month-prev').addEventListener('click', () => { month = addDays(`${month}-15`, -30).slice(0, 7); renderMonth(); });

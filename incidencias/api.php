@@ -66,7 +66,8 @@ try {
             $result = createVacationRequest($db, $target, $dates[0], end($dates), $description, $status, $me['id']);
             if (isset($result['error'])) respond(['error' => $result['error']], $result['code']);
             $id = $result['id'];
-            $days = $result['days'] . ($result['days'] === 1 ? ' día hábil' : ' días hábiles');
+            // A quien trabaja fines de semana se le cuentan también sábados y domingos: no son «hábiles».
+            $days = $result['days'] . ($result['weekends'] ? ($result['days'] === 1 ? ' día' : ' días') : ($result['days'] === 1 ? ' día hábil' : ' días hábiles'));
         } else {
             // Como en asistencia v2: permisos e incapacidades solo cuentan días hábiles (sin fines de semana ni festivos).
             $dates = array_values(array_intersect($dates, vacationWorkdays($dates[0], end($dates))));

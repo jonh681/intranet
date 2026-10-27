@@ -83,7 +83,7 @@ echo incHeader($db, $user, 'index.php', 'Mis incidencias');
 <?= incModal() ?>
 <?= incJson('inc-data', [
     'today' => date('Y-m-d'), 'holidays' => incHolidays(), 'items' => $items,
-    'me' => ['id' => $user['id'], 'busy' => incBusy($db, $user['id']), 'period' => $period, 'hire_date' => $balance['hire_date']],
+    'me' => ['id' => $user['id'], 'busy' => incBusy($db, $user['id']), 'period' => $period, 'hire_date' => $balance['hire_date'], 'weekends' => $balance['weekends']],
 ]) ?>
 </body>
 </html>

@@ -6,6 +6,7 @@ declare(strict_types=1);
 //  - Los días se generan en cada aniversario de la fecha de ingreso (sin adelantos antes del primero).
 //  - Solo se pueden usar dentro de ese periodo (de un aniversario al siguiente); lo no usado se pierde.
 //  - El empleado las pide; las autoriza su jefe directo y las confirma Administración (lib_solicitudes.php).
+//  - Las dermoconsejeras trabajan fines de semana: a ellas también se les cuentan sábados y domingos (los festivos no).
 //    El administrador también puede registrarlas directamente (quedan aprobadas).
 
 // Días de descanso obligatorio (artículo 74 de la Ley Federal del Trabajo) de un año: fecha => nombre.
@@ -32,15 +33,21 @@ function mxHolidays(int $year): array {
 }
 
 // Días hábiles (lunes a viernes, sin festivos oficiales) entre dos fechas, inclusive.
-function vacationWorkdays(string $from, string $to): array {
+// $weekends: también sábados y domingos (quien trabaja fines de semana, ver vacationWeekendIds()).
+function vacationWorkdays(string $from, string $to, bool $weekends = false): array {
     $holidays = [];
     $out = [];
     for ($d = new DateTimeImmutable($from); $d->format('Y-m-d') <= $to; $d = $d->modify('+1 day')) {
         $year = (int)$d->format('Y');
         $holidays[$year] ??= mxHolidays($year);
-        if ((int)$d->format('N') <= 5 && !isset($holidays[$year][$d->format('Y-m-d')])) $out[] = $d->format('Y-m-d');
+        if (($weekends || (int)$d->format('N') <= 5) && !isset($holidays[$year][$d->format('Y-m-d')])) $out[] = $d->format('Y-m-d');
     }
     return $out;
+}
+
+// Personas que trabajan fines de semana (dermoconsejeras): sus vacaciones también se toman en sábado y domingo.
+function vacationWeekendIds(PDO $db): array {
+    return array_map('intval', $db->query("SELECT id FROM usuarios WHERE puesto = 'dermoconsejera'")->fetchAll(PDO::FETCH_COLUMN));
 }
 
 // Días de vacaciones por años de servicio cumplidos: 12, 14, 16, 18, 20 y luego +2 cada 5 años.
@@ -85,10 +92,10 @@ function vacationPeriods(string $hireDate, string $today, array $dates, array $a
     return array_reverse($periods);
 }
 
-// Crea una solicitud de vacaciones del rango [from, to] (solo días hábiles) validando periodo, días ocupados y saldo.
+// Crea una solicitud de vacaciones del rango [from, to] (solo días hábiles; con fines de semana para las dermoconsejeras) validando periodo, días ocupados y saldo.
 // $status: 'aprobada' (la registra el administrador), 'pendiente' (la pide el empleado y espera a su jefe)
 // o 'autorizada' (la pide alguien sin jefe directo: espera a Administración).
-// Devuelve ['days' => n, 'id' => id] o ['error' => mensaje, 'code' => http].
+// Devuelve ['days' => n, 'id' => id, 'weekends' => cuenta fines de semana] o ['error' => mensaje, 'code' => http].
 function createVacationRequest(PDO $db, int $userId, string $from, string $to, string $comment, string $status, int $actorId): array {
     $summary = vacationSummaries($db, $userId)[0] ?? null;
     if (!$summary) return ['error' => 'El usuario no existe.', 'code' => 404];
@@ -98,8 +105,8 @@ function createVacationRequest(PDO $db, int $userId, string $from, string $to, s
         return ['error' => 'Las fechas deben estar dentro del periodo actual (' . date('d/m/Y', strtotime($current['start'])) . ' al ' . date('d/m/Y', strtotime($current['end'])) . ').', 'code' => 422];
     }
     if (mb_strlen($comment) > 500) return ['error' => 'El comentario admite hasta 500 caracteres.', 'code' => 422];
-    $days = vacationWorkdays($from, $to);
-    if (!$days) return ['error' => 'Ese rango no tiene dias habiles (fines de semana o festivos).', 'code' => 422];
+    $days = vacationWorkdays($from, $to, $summary['weekends']);
+    if (!$days) return ['error' => $summary['weekends'] ? 'Ese rango solo tiene dias festivos.' : 'Ese rango no tiene dias habiles (fines de semana o festivos).', 'code' => 422];
     $db->beginTransaction();
     $db->prepare('SELECT id FROM personal_usuarios WHERE id = ? FOR UPDATE')->execute([$userId]);
     $in = implode(',', array_fill(0, count($days), '?'));
@@ -125,7 +132,7 @@ function createVacationRequest(PDO $db, int $userId, string $from, string $to, s
     $insert = $db->prepare('INSERT INTO vacaciones_dias (solicitud_id, usuario_id, fecha) VALUES (?, ?, ?)');
     foreach ($days as $day) $insert->execute([$requestId, $userId, $day]);
     $db->commit();
-    return ['days' => count($days), 'id' => $requestId];
+    return ['days' => count($days), 'id' => $requestId, 'weekends' => $summary['weekends']];
 }
 
 // Vacaciones aprobadas en el formato de incidencias (para que asistencia las cuente como justificadas).
@@ -174,12 +181,13 @@ function vacationSummaries(PDO $db, ?int $onlyUser = null): array {
         $adjustments[(int)$a['usuario_id']][] = $a;
     }
     // Desde cuándo se registran vacaciones aquí: los periodos que terminaron antes no se marcan como vencidos.
+    $weekendIds = array_flip(vacationWeekendIds($db));
     $since = $db->query('SELECT LEAST(COALESCE((SELECT MIN(DATE(creado_en)) FROM vacaciones_ajustes), CURDATE()),
         COALESCE((SELECT MIN(DATE(creado_en)) FROM vacaciones_solicitudes), CURDATE()))')->fetchColumn();
-    return array_map(function (array $u) use ($today, $dates, $adjustments, $since, $requests, $busy) {
+    return array_map(function (array $u) use ($today, $dates, $adjustments, $since, $requests, $busy, $weekendIds) {
         $id = (int)$u['id'];
         $base = ['id' => $id, 'name' => $u['nombre'], 'email' => $u['correo'], 'area' => $u['area'], 'rol' => $u['rol'], 'hire_date' => $u['fecha_ingreso'],
-            'requests' => $requests[$id] ?? [], 'busy' => $busy[$id] ?? []];
+            'requests' => $requests[$id] ?? [], 'busy' => $busy[$id] ?? [], 'weekends' => isset($weekendIds[$id])];
         if (!$u['fecha_ingreso']) return $base + ['periods' => [], 'current' => null, 'next' => null, 'years' => null];
         $hire = new DateTimeImmutable($u['fecha_ingreso']);
         $since = $hire->diff(new DateTimeImmutable($today));

@@ -141,7 +141,7 @@ function incBalance(PDO $db, int $userId): ?array
     $summary = vacationSummaries($db, $userId)[0] ?? null;
     $current = $summary['current'] ?? null;
     return [
-        'hire_date' => $summary['hire_date'] ?? null, 'years' => $summary['years'] ?? null,
+        'hire_date' => $summary['hire_date'] ?? null, 'years' => $summary['years'] ?? null, 'weekends' => $summary['weekends'] ?? false,
         'period' => $current ? ['start' => $current['start'], 'end' => $current['end'], 'entitled' => $current['entitled'],
             'used' => $current['used'], 'pending' => $current['pending'], 'available' => $current['available']] : null,
         'next' => $summary['next'] ?? null,
